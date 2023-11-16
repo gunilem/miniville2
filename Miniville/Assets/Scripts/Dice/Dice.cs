@@ -124,6 +124,5 @@ public class Dice : MonoBehaviour
     private void DiceSetResult(int res)
     {
         result = res;
-        UnityEngine.Debug.Log(res);
     }
 }
