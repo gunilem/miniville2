@@ -448,10 +448,7 @@ MonoBehaviour:
   coin5: {fileID: 5324038775222598575, guid: 5bc68dc31d3869c4fba95873e48188e8, type: 3}
   coin10: {fileID: 609097897958673743, guid: 21c210d886399374ca45a936a350b340, type: 3}
   playerMoney: 37
-  spawnCoin: 37
-  spawn: 0
-  destroyCoin: 0
-  destroy: 0
+  updateMoney: 0
 --- !u!4 &1265671977
 Transform:
   m_ObjectHideFlags: 0

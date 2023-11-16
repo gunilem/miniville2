@@ -10,35 +10,31 @@ public class CoinsManager : MonoBehaviour
     public GameObject coin10;
 
     public int playerMoney;
-
-    public int spawnCoin;
-    public bool spawn;
-
-    public int destroyCoin;
-    public bool destroy;
+    private int prePlayerMoney = 0;
+    public bool updateMoney;
 
     private List<GameObject> displayedCoin = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
     {
-        InstantiateCoins(spawnCoin);
-        destroy = false;
+        updateMoney = false;
     }
 
     void Update()
     {
-        if (destroyCoin != 0 && destroy)
+        if (playerMoney < prePlayerMoney && updateMoney)
         {
-            RemoveCoins(destroyCoin);
-            destroy = false;
+            RemoveCoins(prePlayerMoney - playerMoney);
+            prePlayerMoney = playerMoney;
+        }
+        else if (playerMoney > prePlayerMoney && updateMoney)
+        {
+            InstantiateCoins(playerMoney - prePlayerMoney);
+            prePlayerMoney = playerMoney;
         }
 
-        if (spawnCoin != 0 && spawn)
-        {
-            InstantiateCoins(spawnCoin);
-            spawn = false;
-        }
+        updateMoney = false;
     }
 
     private void InstantiateCoins(int nbCoins)
@@ -47,24 +43,21 @@ public class CoinsManager : MonoBehaviour
 
         while (coinToInstantiate >= 10)
         {
-            displayedCoin.Add(coin10);
+            displayedCoin.Add(Instantiate(coin10, gameObject.transform));
             coinToInstantiate -= 10;
         }
 
         while (coinToInstantiate >= 5)
         {
-            displayedCoin.Add(coin5);
+            displayedCoin.Add(Instantiate(coin5, gameObject.transform));
             coinToInstantiate -= 5;
         }
 
         while (coinToInstantiate >= 1)
         {
-            displayedCoin.Add(coin1);
+            displayedCoin.Add(Instantiate(coin1, gameObject.transform));
             coinToInstantiate -= 1;
         }
-
-        foreach (GameObject coin in displayedCoin)
-            CoinsManager.Instantiate(coin, gameObject.transform);
     }
 
     private void RemoveCoins(int nbCoins)
@@ -73,97 +66,112 @@ public class CoinsManager : MonoBehaviour
         List<GameObject> coinsToRemove = new List<GameObject>();
         int coinsToAdd = 0;
 
-        Debug.Log(nbCoinToRemove);
-
         if (playerMoney >= nbCoinToRemove)
         {
             for (int i = nbCoinToRemove; i >= 10; i -= 10)
             {
-                Debug.Log("Coin 10 degage ptn");
-                GameObject coinToRemove = displayedCoin.FirstOrDefault(objet => objet.name == "Coins_10(Clone)");
-
-                if (coinToRemove != null)
+                foreach (GameObject coin in displayedCoin)
                 {
-                    Debug.Log("Nik mamie");
-                    coinsToRemove.Add(coinToRemove);
-                    displayedCoin.Remove(coinToRemove);
-                    nbCoinToRemove -= 10;
+                    if (coin.name == "Coins_10(Clone)")
+                    {
+                        coinsToRemove.Add(coin);
+                        displayedCoin.Remove(coin);
+                        nbCoinToRemove -= 10;
+                        break;
+                    }
                 }
             }
 
             for (int i = nbCoinToRemove; i >= 5; i -= 5)
             {
-                Debug.Log("Coin 5 degage ptn");
-                GameObject coinToRemove = displayedCoin.FirstOrDefault(objet => objet.name == "Coins_5(Clone)");
+                bool coinRemoved = false;
 
-                if (coinToRemove != null)
+                foreach (GameObject coin in displayedCoin)
                 {
-                    Debug.Log("Nik mamie");
-                    coinsToRemove.Add(coinToRemove);
-                    displayedCoin.Remove(coinToRemove);
-                    nbCoinToRemove -= 5;
-                }
-                else
-                {
-                    GameObject coinToRemove2 = displayedCoin.FirstOrDefault(objet => objet.name == "Coins_10(Clone)");
-                    if (coinToRemove2 != null)
+                    if (coin.name == "Coins_5(Clone)")
                     {
-                        coinsToRemove.Add(coinToRemove2);
-                        displayedCoin.Remove(coinToRemove2);
-                        coinsToAdd += 5;
+                        coinsToRemove.Add(coin);
+                        displayedCoin.Remove(coin);
                         nbCoinToRemove -= 5;
+                        coinRemoved = true;
+                        break;
+                    }
+                }
+                
+                if (!coinRemoved)
+                {
+                    foreach (GameObject coin in displayedCoin)
+                    {
+                        if (coin.name == "Coins_10(Clone)")
+                        {
+                            coinsToRemove.Add(coin);
+                            displayedCoin.Remove(coin);
+                            coinsToAdd += 5;
+                            nbCoinToRemove -= 5;
+                            coinRemoved = true;
+                            break;
+                        }
                     }
                 }
             }
 
             for (int i = nbCoinToRemove; i >= 1; i -= 1)
             {
-                Debug.Log("Coin 1 degage ptn");
-                GameObject coinToRemove = displayedCoin.FirstOrDefault(objet => objet.name == "Coins_1(Clone)");
+                bool coinRemoved = false;
 
-                if (coinToRemove != null)
+                foreach (GameObject coin in displayedCoin)
                 {
-                    Debug.Log("Nik mamie");
-                    coinsToRemove.Add(coinToRemove);
-                    displayedCoin.Remove(coinToRemove);
-                    nbCoinToRemove -= 1;
-                }
-                else
-                {
-                    GameObject coinToRemove2 = displayedCoin.FirstOrDefault(objet => objet.name == "Coins_5(Clone)");
-                    if (coinToRemove2 != null)
+                    if (coin.name == "Coins_1(Clone)")
                     {
-                        coinsToRemove.Add(coinToRemove2);
-                        displayedCoin.Remove(coinToRemove2);
-                        coinsToAdd += 4;
+                        coinsToRemove.Add(coin);
+                        displayedCoin.Remove(coin);
                         nbCoinToRemove -= 1;
+                        coinRemoved = true;
+                        break;
                     }
-                    else
+                }
+
+                if (!coinRemoved)
+                {
+                    foreach (GameObject coin in displayedCoin)
                     {
-                        GameObject coinToRemove3 = displayedCoin.FirstOrDefault(objet => objet.name == "Coins_10(Clone)");
-                        if (coinToRemove3 != null)
+                        if (coin.name == "Coins_5(Clone)")
                         {
-                            coinsToRemove.Add(coinToRemove3);
-                            displayedCoin.Remove(coinToRemove3);
-                            coinsToAdd += 9;
+                            coinsToRemove.Add(coin);
+                            displayedCoin.Remove(coin);
+                            coinsToAdd += 4;
                             nbCoinToRemove -= 1;
+                            coinRemoved = true;
+                            break;
+                        }
+                    }
+
+                    if (!coinRemoved)
+                    {
+                        foreach (GameObject coin in displayedCoin)
+                        {
+                            if (coin.name == "Coins_10(Clone)")
+                            {
+                                coinsToRemove.Add(coin);
+                                displayedCoin.Remove(coin);
+                                coinsToAdd += 9;
+                                nbCoinToRemove -= 1;
+                                coinRemoved = true;
+                                break;
+                            }
                         }
                     }
                 }
             }
 
-            Debug.Log("ptn");
-
-            foreach (GameObject coin in coinsToRemove)
+            for (int i = 0; i < coinsToRemove.Count; i++)
             {
+                GameObject coin = coinsToRemove[i];
                 Destroy(coin);
-                Debug.Log(coin.ToString());
             }
 
             if (coinsToAdd > 0)
                 InstantiateCoins(coinsToAdd);
         }
-        else
-            Debug.Log("Pas assez de tune salope");
     }
 }
