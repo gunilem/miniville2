@@ -5,16 +5,23 @@ using UnityEngine;
 
 public class AllCards : MonoBehaviour
 {
-    [SerializeField] CardData[] allScriptableObj;
-    private Dictionary<CardName, CardData> CardsData;
+    [SerializeField] CardData[] allCardsData;
+    public static Dictionary<CardName, CardData> CardsData;
+
+    [SerializeField] MonumentData[] allmonumentsData;
+    public static Dictionary<MonumentName, MonumentData> MonumentsData;
 
     public static Dictionary<CardName, CardScript> allCards = new Dictionary<CardName, CardScript>();
 
     private void Start()
     {
-        foreach (var card in allScriptableObj)
+        foreach (var card in allCardsData)
         {
             CardsData.Add(card.cardName, card);
+        }
+        foreach (var mon in allmonumentsData)
+        {
+            MonumentsData.Add(mon.monumentName, mon);
         }
 
         allCards.Add(CardName.WheatFields,new TakeCoins(CardsData[CardName.WheatFields], 1)); //Champ de blé 
