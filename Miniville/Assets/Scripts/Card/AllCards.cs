@@ -6,10 +6,10 @@ using UnityEngine;
 public class AllCards : MonoBehaviour
 {
     [SerializeField] CardData[] allCardsData;
-    public static Dictionary<CardName, CardData> CardsData;
+    public static Dictionary<CardName, CardData> CardsData = new Dictionary<CardName, CardData>();
 
     [SerializeField] MonumentData[] allmonumentsData;
-    public static Dictionary<MonumentName, MonumentData> MonumentsData;
+    public static Dictionary<MonumentName, MonumentData> MonumentsData = new Dictionary<MonumentName, MonumentData>();
 
     public static Dictionary<CardName, CardScript> allCards = new Dictionary<CardName, CardScript>();
 
