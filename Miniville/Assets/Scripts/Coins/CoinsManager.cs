@@ -45,7 +45,6 @@ public class CoinsManager : MonoBehaviour
                     RemoveCoins(players[i], prePlayersMoney[i] - players[i].coin);
                     prePlayersMoney[i] = players[i].coin;
                 }
-
             }
         }
 
@@ -87,27 +86,25 @@ public class CoinsManager : MonoBehaviour
 
         while (coinToInstantiate >= 1)
         {
+            nbOfcoin1 = 0;
             instantiated = false;
             foreach (GameObject coin in displayedCoinPerPlayer[players.IndexOf(player)])
             {
                 if (coin.name == "Coins_1(Clone)")
                     nbOfcoin1++;
-
-                if (nbOfcoin1 >= 5)
-                {
-                    RemoveCoins(player, 1);
-                    RemoveCoins(player, 1);
-                    RemoveCoins(player, 1);
-                    RemoveCoins(player, 1);
-                    RemoveCoins(player, 1);
-
-                    InstantiateCoins(player, 5);
-                    coinToInstantiate -= 5;
-                    instantiated = true;
-                    break;
-                }
             }
-            if (!instantiated)
+
+            if (nbOfcoin1 == 4)
+            {
+                RemoveCoins(player, 1);
+                RemoveCoins(player, 1);
+                RemoveCoins(player, 1);
+                RemoveCoins(player, 1);
+
+                InstantiateCoins(player, 5);
+                coinToInstantiate -= 1;
+            }
+            else
             {
                 displayedCoinPerPlayer[players.IndexOf(player)].Add(Instantiate(coin1, player.gameObject.transform));
                 coinToInstantiate -= 1;
@@ -222,11 +219,22 @@ public class CoinsManager : MonoBehaviour
             for (int i = 0; i < coinsToRemove.Count; i++)
             {
                 GameObject coin = coinsToRemove[i];
-                Destroy(coin);
+
+                coin.GetComponent<MeshCollider>().enabled = false;
+                coin.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-10, 11), Random.Range(1, 11), Random.Range(-10, 11)).normalized * Random.Range(500, 1000), ForceMode.Impulse);
+                coin.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(1, 11), Random.Range(1, 11), Random.Range(1, 11)).normalized * Random.Range(500, 1000));
+
+                StartCoroutine(MyCoroutine(coin));
             }
 
             if (coinsToAdd > 0)
                 InstantiateCoins(player, coinsToAdd);
         }
+    }
+
+    IEnumerator MyCoroutine(GameObject coin)
+    {
+        yield return new WaitForSeconds(1.0f);
+        Destroy(coin);
     }
 }
