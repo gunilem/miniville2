@@ -34,7 +34,6 @@ public class Dice : MonoBehaviour
 
     public void TrowDice()
     {
-<<<<<<<< HEAD:Miniville/Assets/Scripts/Dice/Dice.cs
         float _xDec = UnityEngine.Random.Range(-0.1f, 0.1f);
         float _yDec = UnityEngine.Random.Range(-0.1f, 0.1f);
         float _zDec = UnityEngine.Random.Range(-0.1f, 0.1f);
@@ -42,15 +41,7 @@ public class Dice : MonoBehaviour
         rb.AddForce(new Vector3(2f+ _xDec, 3f+ _yDec, 2f + _zDec), ForceMode.Impulse);
         rb.AddTorque(Vector3.left* torqueForce);
         result = -1;
-========
-        if (throwDice)
-        {
-            rb.AddForce(new Vector3(10,10,10), ForceMode.Impulse);
-            rb.AddTorque(Vector3.left * torqueForce);
-            throwDice = false;
-        }
         
->>>>>>>> corentin:Miniville/Assets/Scripts/Dice/Cube.cs
     }
 
     private void FixedUpdate()
