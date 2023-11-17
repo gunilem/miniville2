@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{8faf0d1e-de73-4b83-8115-cd4b05e3ad95}">
+		<property name="assetPath">
+			<value>CoinSpawn/Coin_Spawn_1.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.26174999999999998</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bc24fd2c-e7e6-48a6-b6b0-9623b6e31f0b}</destination>
+		</relationship>
+	</object>
+</objects>

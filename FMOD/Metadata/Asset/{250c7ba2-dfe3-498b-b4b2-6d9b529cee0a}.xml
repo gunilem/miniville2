@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="EncodableAsset" id="{250c7ba2-dfe3-498b-b4b2-6d9b529cee0a}">
+		<property name="assetPath">
+			<value>CoinSpawn/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bc24fd2c-e7e6-48a6-b6b0-9623b6e31f0b}</destination>
+		</relationship>
+	</object>
+</objects>
