@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{fa9fce0b-8193-448a-9875-8ad267a4a9c8}">
 		<property name="name">
-			<value>CardFlip</value>
+			<value>Card_ToBack</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
