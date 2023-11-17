@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{bcf25732-f1e0-4b4a-bbde-caa1200240a9}">
+		<property name="assetPath">
+			<value>CoinCollision/Coin_Collision_4.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.29556250000000001</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bc24fd2c-e7e6-48a6-b6b0-9623b6e31f0b}</destination>
+		</relationship>
+	</object>
+</objects>
