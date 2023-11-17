@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{8faf0d1e-de73-4b83-8115-cd4b05e3ad95}">
+	<object class="AudioFile" id="{0b734807-b482-49c8-b7bf-a4ddd85a8a0e}">
 		<property name="assetPath">
-			<value>CoinCollision/Coin_Collision_1.wav</value>
+			<value>CoinCollision/Coin_Collision_Rug_3.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>
@@ -11,7 +11,7 @@
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>0.26174999999999998</value>
+			<value>0.078479166666666669</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{bc24fd2c-e7e6-48a6-b6b0-9623b6e31f0b}</destination>

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FMODUnity
 {
-    public class SD_Coins : MonoBehaviour
+    public class SFX_Coins : MonoBehaviour
     {
         public EventReference eventReference;
         private FMOD.Studio.EventInstance eventInstance;
@@ -26,12 +26,22 @@ namespace FMODUnity
 
         private void OnTriggerEnter(Collider other)
         {
+            float speed = this.gameObject.GetComponent<Rigidbody>().velocity.magnitude;
+            if (speed > 5) { speed = 5; }
+
             if (other.tag == "Coin" && other != this.gameObject.GetComponent<Collider>())
-            {
                 eventInstance.setParameterByName("COIN_Collider", 0f);
-                eventInstance.setParameterByName("COIN_Velocity", this.gameObject.GetComponent<Rigidbody>().velocity.magnitude);
-                eventInstance.start();
-            }
+
+            if (other.tag == "Table" && other != this.gameObject.GetComponent<Collider>())
+                eventInstance.setParameterByName("COIN_Collider", 1f);
+
+            eventInstance.setParameterByName("COIN_Velocity", speed / 5);
+            eventInstance.start();
+
+            /*// DEBUG
+            float debug;
+            eventInstance.getParameterByName("COIN_Collider", out debug);
+            Debug.Log("Velocity : " + (speed / 5) + "MaterialFMOD : " + debug);*/
         }
     }
 }
