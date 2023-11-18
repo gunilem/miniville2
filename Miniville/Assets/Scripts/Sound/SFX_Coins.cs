@@ -14,14 +14,12 @@ namespace FMODUnity
         void Start()
         {
             eventInstance = FMODUnity.RuntimeManager.CreateInstance(eventReference);
-
         }
 
         // Update is called once per frame
         void Update()
         {
             eventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
-
         }
 
         private void OnTriggerEnter(Collider other)
