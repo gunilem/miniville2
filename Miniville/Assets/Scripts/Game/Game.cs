@@ -32,9 +32,9 @@ public class Game : MonoBehaviour
     void Start()
     {
         FillPile();
-        Debug.Log("nmb de joueur : " + numberOfPlayers);
         for(int i = 0; i < numberOfPlayers; i++) { players.Add(new Player()); }
         currentPlayerIndex = 0;
+        players[2].PileCards[CardName.CoffeeShop] = 10;
         
         
         state = PlayerTrowDices;
@@ -100,15 +100,23 @@ public class Game : MonoBehaviour
     {
         for(int i = 0; i < players.Count; i++)
         {
-            if (i == currentPlayerIndex) i++;
-            foreach (CardName name in AllCards.CardsData.Keys)
+            if (i != currentPlayerIndex)
             {
-                if (AllCards.CardsData[name].color == CardColor.Red && players[i].PileCards[name] > 0) //si c'est un carte rouge et que le joueur la possède
+                foreach (CardName name in AllCards.CardsData.Keys)
                 {
-                    players[currentPlayerIndex].PaidOtherPlayer(players[i], AllCards.allCards[name].Action());
+                    if (AllCards.CardsData[name].color == CardColor.Red && players[i].PileCards[name] > 0) //si c'est un carte rouge et que le joueur la possède
+                    {
+                        for(int y = 0; y < players[i].PileCards[name]; y++)
+                        {
+                            Debug.Log("Name : " + name);
+                            players[currentPlayerIndex].PaidOtherPlayer(players[i], AllCards.allCards[name].Action());
+                        }
+                    }
                 }
             }
         }
+        
+        state = PlayerBuild;
     }
     public void PlayerBuild()
     {

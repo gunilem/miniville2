@@ -370,7 +370,7 @@ MonoBehaviour:
   dices:
   - {fileID: 1095663888}
   - {fileID: 334280342}
-  numberOfPlayers: 1
+  numberOfPlayers: 4
   waitDiceFinalResult: 30
 --- !u!1 &669001510 stripped
 GameObject:
