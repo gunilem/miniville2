@@ -1,8 +1,22 @@
 fileFormatVersion: 2
+<<<<<<< Updated upstream
 guid: 39c4509cb30ddf24d8b389ee360e534b
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
+=======
+<<<<<<<< Updated upstream:Miniville/Assets/Scripts/Dice/DicePhysic.physicMaterial.meta
+guid: 16507def65254784581cfb5bfe3d6540
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+========
+guid: cc47874b8ea3b90478c2ee7cfae09f53
+folderAsset: yes
+DefaultImporter:
+  externalObjects: {}
+>>>>>>>> Stashed changes:Miniville/Assets/Model.meta
+>>>>>>> Stashed changes
   userData: 
   assetBundleName: 
   assetBundleVariant: 
