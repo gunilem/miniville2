@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class CardSelector : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class CardSelector : MonoBehaviour
 
     bool ifCardSelected = false;
     bool isRotated = false;
+
+    public SFX_Cards sfx;
 
     private void Update()
     {
@@ -67,6 +70,8 @@ public class CardSelector : MonoBehaviour
             Selectedcard = hit.transform;
             isSelectingCard = true;
 
+            //SFX
+            sfx.PlaySound("cardToFront", Selectedcard);
         }
         
     }
@@ -79,6 +84,9 @@ public class CardSelector : MonoBehaviour
         {
             isRotated = false;
             Selectedcard.Rotate(Vector3.right, 180);
+
+            //SFX
+            sfx.PlaySound("cardToBack", Selectedcard);
         }
         canva.SetActive(false);
     }
@@ -92,6 +100,9 @@ public class CardSelector : MonoBehaviour
         {
             Selectedcard.Rotate(Vector3.right, 180);
             isRotated = !isRotated;
+
+            //SFX
+            sfx.PlaySound("cardFlip", Selectedcard);
         }
     }
 }

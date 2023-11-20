@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FMODUnity
 {
-    public class SFX_Cards : MonoBehaviour
+    public class SFX_Cards : CardSelector
     {
         public EventReference cardToFront;
         public EventReference cardToBack;
@@ -21,15 +21,18 @@ namespace FMODUnity
             switch (soundName)
             {
                 case "cardToFront":
-                    // Mettre le PlayOneShot
+                    FMODUnity.RuntimeManager.PlayOneShot(cardToFront, GetComponent<Transform>().position);
+                    Debug.Log("Play sound : cardToFront");
                     break;
 
                 case "cardToBack":
-                    // Mettre le PlayOneShot
+                    FMODUnity.RuntimeManager.PlayOneShot(cardToBack, GetComponent<Transform>().position);
+                    Debug.Log("Play sound : cardToBack");
                     break;
 
                 case "cardFlip":
-                    // Mettre le PlayOneShot
+                    FMODUnity.RuntimeManager.PlayOneShot(cardFlip, GetComponent<Transform>().position);
+                    Debug.Log("Play sound : cardFlip");
                     break;
 
                 default:

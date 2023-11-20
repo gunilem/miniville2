@@ -3267,6 +3267,7 @@ MonoBehaviour:
   canva: {fileID: 119750303}
   speed: 2
   positionOfCard: {fileID: 348463893}
+  sfx: {fileID: 1964624433}
 --- !u!20 &1964624431
 Camera:
   m_ObjectHideFlags: 0
@@ -3343,6 +3344,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 761a39551cbac1444a2dbd3267b4acde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 0}
+  mask:
+    serializedVersion: 2
+    m_Bits: 0
+  basePos: {x: 0, y: 0, z: 0}
+  Selectedcard: {fileID: 0}
+  canva: {fileID: 0}
+  speed: 2
+  positionOfCard: {fileID: 0}
+  sfx: {fileID: 0}
   cardToFront:
     Guid:
       Data1: -288938771
