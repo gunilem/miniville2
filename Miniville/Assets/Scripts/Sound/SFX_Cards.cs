@@ -22,17 +22,14 @@ namespace FMODUnity
             {
                 case "cardToFront":
                     FMODUnity.RuntimeManager.PlayOneShot(cardToFront, GetComponent<Transform>().position);
-                    Debug.Log("Play sound : cardToFront");
                     break;
 
                 case "cardToBack":
                     FMODUnity.RuntimeManager.PlayOneShot(cardToBack, GetComponent<Transform>().position);
-                    Debug.Log("Play sound : cardToBack");
                     break;
 
                 case "cardFlip":
                     FMODUnity.RuntimeManager.PlayOneShot(cardFlip, GetComponent<Transform>().position);
-                    Debug.Log("Play sound : cardFlip");
                     break;
 
                 default:

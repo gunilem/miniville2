@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="EncodableAsset" id="{64f0ad93-7404-4c09-96d6-a3744fc1186e}">
+	<object class="EncodableAsset" id="{d3721100-1285-41b4-a7c5-a51485879850}">
 		<property name="assetPath">
-			<value>Coin/</value>
+			<value>Cards/</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{bc24fd2c-e7e6-48a6-b6b0-9623b6e31f0b}</destination>

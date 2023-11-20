@@ -84,11 +84,11 @@ public class CardSelector : MonoBehaviour
         {
             isRotated = false;
             Selectedcard.Rotate(Vector3.right, 180);
-
-            //SFX
-            sfx.PlaySound("cardToBack", Selectedcard);
         }
         canva.SetActive(false);
+
+        //SFX
+        sfx.PlaySound("cardToBack", Selectedcard);
     }
 
     public void FlipCard()
