@@ -8,8 +8,12 @@
 [LOG] Thread::initThread                       : Init FMOD stream thread. Affinity: 0x4000000000000003, Priority: 0xFFFF7FFB, Stack Size: 98304, Semaphore: No, Sleep Time: 10, Looping: Yes.
 [LOG] Thread::initThread                       : Init FMOD mixer thread. Affinity: 0x4000000000000001, Priority: 0xFFFF7FFA, Stack Size: 81920, Semaphore: No, Sleep Time: 0, Looping: Yes.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 [WRN] OutputWASAPI::mixerThread                : Starvation detected in WASAPI output buffer!
 [LOG] AsyncManager::init                       : manager 0000025795018608 isAsync 0 updatePeriod 0.02
+=======
+[LOG] AsyncManager::init                       : manager 000001582E9CB8C8 isAsync 0 updatePeriod 0.02
+>>>>>>> Stashed changes
 =======
 [LOG] AsyncManager::init                       : manager 000001582E9CB8C8 isAsync 0 updatePeriod 0.02
 >>>>>>> Stashed changes
@@ -24,8 +28,11 @@
 [LOG] Manager::readBank                        : fileversion = 142, compatVersion = 140 (oldest = 44, newest = 142)
 [LOG] PlaybackSystem::acquireMasterBus         : Setting master channel group format to 3
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 [ERR] assert                                   : assertion: 'gSystemInitCount == 0' failed
 =======
+=======
+>>>>>>> Stashed changes
 [LOG] Thread::callback                         : FMOD Studio bank load thread finished.
 [LOG] Thread::callback                         : FMOD Studio sample load thread finished.
 [LOG] LiveUpdate::release                      : 
@@ -33,4 +40,7 @@
 [LOG] Thread::callback                         : FMOD stream thread finished.
 [LOG] Thread::callback                         : FMOD mixer thread finished.
 [LOG] SystemI::close                           : Closed.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
