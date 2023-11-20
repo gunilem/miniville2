@@ -26,12 +26,6 @@ public class Dice : MonoBehaviour
         result = -1;
     }
 
-    // Update is called once per frame
-    void Update()
-    {   
-
-    }
-
     public void TrowDice()
     {
         float _xDec = UnityEngine.Random.Range(-0.1f, 0.1f);

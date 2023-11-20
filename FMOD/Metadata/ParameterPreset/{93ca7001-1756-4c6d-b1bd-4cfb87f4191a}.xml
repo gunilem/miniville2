@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{93ca7001-1756-4c6d-b1bd-4cfb87f4191a}">
+		<property name="name">
+			<value>DICE_Velocity</value>
+		</property>
+		<relationship name="folder">
+			<destination>{3f717134-8b0d-474f-be6a-845184f741e4}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{99bb3e82-794d-4e14-ae34-a508946d100e}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{99bb3e82-794d-4e14-ae34-a508946d100e}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

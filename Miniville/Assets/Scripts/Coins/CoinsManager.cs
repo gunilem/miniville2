@@ -56,7 +56,6 @@ public class CoinsManager : MonoBehaviour
         int coinToInstantiate = nbCoins;
         bool instantiated = false;
         int nbOfcoin1 = 0;
-        Debug.Log("59");
 
         while (coinToInstantiate >= 10)
         {
@@ -118,7 +117,6 @@ public class CoinsManager : MonoBehaviour
         int nbCoinToRemove = nbCoins;
         List<GameObject> coinsToRemove = new List<GameObject>();
         int coinsToAdd = 0;
-        Debug.Log("121 | nbCoinToRemove : " + nbCoinToRemove);
 
         // ENLEVE LES PIECES DE 10
         for (int i = nbCoinToRemove; i >= 10; i -= 10)
@@ -130,7 +128,6 @@ public class CoinsManager : MonoBehaviour
                     coinsToRemove.Add(coin);
                     displayedCoinPerPlayer[players.IndexOf(player)].Remove(coin);
                     nbCoinToRemove -= 10;
-                    Debug.Log("135");
                     break;
                 }
             }
