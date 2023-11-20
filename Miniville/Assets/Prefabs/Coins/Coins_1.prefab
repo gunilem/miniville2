@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Coins_1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7c08fab552ed79149adbdd0e2bb2340e, type: 3}
+      propertyPath: m_TagString
+      value: Coin
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -65,7 +69,13 @@ PrefabInstance:
       addedObject: {fileID: 8837473666347725740}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7c08fab552ed79149adbdd0e2bb2340e, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1459413975625659098}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7c08fab552ed79149adbdd0e2bb2340e, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1354543033316885675}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7c08fab552ed79149adbdd0e2bb2340e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7020679625670039774}
   m_SourcePrefab: {fileID: 100100000, guid: 7c08fab552ed79149adbdd0e2bb2340e, type: 3}
 --- !u!1 &6471673602588368082 stripped
 GameObject:
@@ -88,6 +98,28 @@ MeshCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6739027680649345306, guid: 7c08fab552ed79149adbdd0e2bb2340e, type: 3}
+--- !u!64 &1459413975625659098
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6471673602588368082}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
@@ -121,3 +153,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7020679625670039774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6471673602588368082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deab468ccde90814c9b9e1a6085185e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventReference:
+    Guid:
+      Data1: 1935690937
+      Data2: 1120440672
+      Data3: -1614584397
+      Data4: -1168958620
+    Path: event:/Coin/CoinCollide

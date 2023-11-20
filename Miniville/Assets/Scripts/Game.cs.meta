@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: 4a60d0d64912d1f48824b0981adc88fa
+<<<<<<<< HEAD:Miniville/Assets/Scripts/Game.cs.meta
+guid: a16f95d2e8a02734783d2c2f870c411f
+========
+guid: f5183f14633181d46a7492f9eb3f8d98
+>>>>>>>> 0b31e11d1ff2eaecd3a77f6c186c9ebc834d0677:Miniville/Assets/Scripts/CardSort.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

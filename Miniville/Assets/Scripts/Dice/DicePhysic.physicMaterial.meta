@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 <<<<<<<< Updated upstream:Miniville/Assets/Scripts/Dice/DicePhysic.physicMaterial.meta
 guid: 16507def65254784581cfb5bfe3d6540
+=======
+guid: 717de4b880dfa1845a0d51107156540c
+>>>>>>> 0b31e11d1ff2eaecd3a77f6c186c9ebc834d0677
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000

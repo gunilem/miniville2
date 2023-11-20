@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{051e05a3-c553-48a4-88fc-26d4b36a5686}">
+		<property name="name">
+			<value>COIN_Collider</value>
+		</property>
+		<relationship name="folder">
+			<destination>{3f717134-8b0d-474f-be6a-845184f741e4}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{2b0c3868-864d-4d1c-98cb-20bf6e1ec81e}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{2b0c3868-864d-4d1c-98cb-20bf6e1ec81e}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>Coin</value>
+			<value>Table</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
