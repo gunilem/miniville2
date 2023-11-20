@@ -15,6 +15,6 @@ MonoBehaviour:
   cardName: 13
   type: 0
   color: 0
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: 3900fcbf5561f0b47bdf566b608bff29, type: 2}
   Dice: 0a000000
   Cost: 3

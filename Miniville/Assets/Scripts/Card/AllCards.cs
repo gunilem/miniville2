@@ -13,7 +13,7 @@ public class AllCards : MonoBehaviour
 
     public static Dictionary<CardName, CardScript> allCards = new Dictionary<CardName, CardScript>();
 
-    private void Start()
+    private void Awake()
     {
         foreach (var card in allCardsData)
         {
@@ -30,9 +30,6 @@ public class AllCards : MonoBehaviour
         allCards.Add(CardName.CoffeeShop, new TakeCoins(CardsData[CardName.CoffeeShop], 1)); //Café
         allCards.Add(CardName.Store, new TakeCoins(CardsData[CardName.Store], 3)); //supérette
         allCards.Add(CardName.Forest, new TakeCoins(CardsData[CardName.Forest], 1)); //Forest
-
-
-
         allCards.Add(CardName.Dairy, new CoinsFromType(CardsData[CardName.Dairy], 3, CardType.Animal)); //Fromagerie
         allCards.Add(CardName.FurnitureFactory, new CoinsFromType(CardsData[CardName.FurnitureFactory], 3, CardType.Gear)); //Frabique de meubles
         allCards.Add(CardName.Mine, new TakeCoins(CardsData[CardName.Mine], 5)); //Mine

@@ -41,10 +41,6 @@ public class Dice : MonoBehaviour
         rb.AddForce(new Vector3(2f+ _xDec, 3f+ _yDec, 2f + _zDec), ForceMode.Impulse);
         rb.AddTorque(Vector3.left* torqueForce);
         result = -1;
-<<<<<<< HEAD
-=======
-        
->>>>>>> 0b31e11d1ff2eaecd3a77f6c186c9ebc834d0677
     }
 
     private void FixedUpdate()
