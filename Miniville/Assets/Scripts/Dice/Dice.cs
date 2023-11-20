@@ -17,7 +17,7 @@ public class Dice : MonoBehaviour
 
     public int result;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         xprevious = transform.position.x;
@@ -26,15 +26,22 @@ public class Dice : MonoBehaviour
         result = -1;
     }
 
+    // Update is called once per frame
+    void Update()
+    {   
+
+    }
+
     public void TrowDice()
     {
+        result = -1;
         float _xDec = UnityEngine.Random.Range(-0.1f, 0.1f);
         float _yDec = UnityEngine.Random.Range(-0.1f, 0.1f);
         float _zDec = UnityEngine.Random.Range(-0.1f, 0.1f);
 
         rb.AddForce(new Vector3(2f+ _xDec, 3f+ _yDec, 2f + _zDec), ForceMode.Impulse);
         rb.AddTorque(Vector3.left* torqueForce);
-        result = -1;
+
     }
 
     private void FixedUpdate()

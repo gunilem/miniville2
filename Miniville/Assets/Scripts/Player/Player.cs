@@ -54,5 +54,22 @@ public class Player : MonoBehaviour
         return false;
     }
 
+    public void PaidOtherPlayer(Player other, int price)
+    {
+        if(Coins <= 0)
+        {
+            return;
+        }
+        else if(Coins - price <= 0)
+        {
+            other.Coins += this.Coins;
+            this.Coins -= price;
+        }
+        else
+        {
+            other.Coins += price;
+            this.Coins -= price;
+        }
+    }
 
 }
