@@ -295,6 +295,7 @@ GameObject:
   m_Component:
   - component: {fileID: 642314287}
   - component: {fileID: 642314288}
+  - component: {fileID: 642314289}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -332,6 +333,39 @@ MonoBehaviour:
   dices:
   - {fileID: 1095663888}
   - {fileID: 334280342}
+--- !u!114 &642314289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642314286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8282ec58840b4a340a07f5c5a139a475, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allCardsData:
+  - {fileID: 11400000, guid: d4e61bd393b5a3044af557857dc0c0e8, type: 2}
+  - {fileID: 11400000, guid: 9dda779fc0744844790902882d6916b3, type: 2}
+  - {fileID: 11400000, guid: ce7eca945daa50845ab0eeb92e9bee10, type: 2}
+  - {fileID: 11400000, guid: d9c95613852a743448041f92a49a6fd1, type: 2}
+  - {fileID: 11400000, guid: 78653eacf2e93724fa3437a47436bec5, type: 2}
+  - {fileID: 11400000, guid: 452098d17cd80e94c863c62d5db8a121, type: 2}
+  - {fileID: 11400000, guid: 39f08230487dec046b528df45c9d810e, type: 2}
+  - {fileID: 11400000, guid: 32befd2d89bf0954d80fa3c5642db465, type: 2}
+  - {fileID: 11400000, guid: 9ba4da62cd6ad9c44b4b734e87f6f128, type: 2}
+  - {fileID: 11400000, guid: cf1a73525db532846aca7af5bf6e32e8, type: 2}
+  - {fileID: 11400000, guid: e86d11f7e83506b4e9c931e6f7ffa34d, type: 2}
+  - {fileID: 11400000, guid: bb4c896ff615e384f93929e50d004523, type: 2}
+  - {fileID: 11400000, guid: b4f6b912f7f1911478eabbfbf097a360, type: 2}
+  - {fileID: 11400000, guid: 5e0fe1eddf0ef474f9a4fd2971b015ea, type: 2}
+  - {fileID: 11400000, guid: f9df7a138a6b7a04da64c1a13c46260a, type: 2}
+  allmonumentsData:
+  - {fileID: 11400000, guid: f4fe49f9f5e66c845a48e645288751d7, type: 2}
+  - {fileID: 11400000, guid: 68ce47dca75447248b2eb8c54bd1546c, type: 2}
+  - {fileID: 11400000, guid: e053a0b2f56cadb4e9f3db2753b28745, type: 2}
+  - {fileID: 11400000, guid: 936d5da7c7c3e2f4dba1bfb4b713d73b, type: 2}
 --- !u!1 &669001510 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -516098083770646512, guid: 43bc06d23ffc8a04e8cb30f314ce8f3a, type: 3}

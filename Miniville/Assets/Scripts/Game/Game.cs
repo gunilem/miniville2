@@ -7,7 +7,6 @@ public class Game : MonoBehaviour
 {
     public static Game instance;
     
-
     [SerializeField] Dice[] dices = new Dice[2];
     List<Player> players = new List<Player>();
     public Dictionary<CardName, int> PileCards = new Dictionary<CardName, int>();
@@ -76,7 +75,8 @@ public class Game : MonoBehaviour
 
         if (_allDicesHaveAResult)
         {
-            waitDiceFinalResult -= 1 * Time.deltaTime;
+            Debug.Log(waitDiceFinalResult);
+            waitDiceFinalResult -= 10f * Time.deltaTime;
         }
 
         if (waitDiceFinalResult <= 0)
