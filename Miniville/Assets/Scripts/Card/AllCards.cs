@@ -13,7 +13,7 @@ public class AllCards : MonoBehaviour
 
     public static Dictionary<CardName, CardScript> allCards = new Dictionary<CardName, CardScript>();
 
-    private void Start()
+    private void Awake()
     {
         foreach (var card in allCardsData)
         {
