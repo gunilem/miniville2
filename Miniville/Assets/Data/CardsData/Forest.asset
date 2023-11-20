@@ -15,6 +15,6 @@ MonoBehaviour:
   cardName: 5
   type: 4
   color: 0
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: 0a6a48dc1d7fbb747a3bff0cb7230dce, type: 2}
   Dice: 05000000
   Cost: 3
