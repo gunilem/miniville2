@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FMODUnity
 {
-    public class SFX_Cards : CardSelector
+    public class SFX_Cards : MonoBehaviour
     {
         public EventReference cardToFront;
         public EventReference cardToBack;
