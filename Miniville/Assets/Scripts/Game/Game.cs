@@ -10,7 +10,7 @@ public class Game : MonoBehaviour
     [Header("Data")]
     [SerializeField] Dice[] dices = new Dice[2];
     List<Player> players = new List<Player>();
-    Player currentPlayer;
+    int currentPlayerIndex;
     public Dictionary<CardName, int> PileCards = new Dictionary<CardName, int>();
 
     [Header("Settings")]
@@ -34,7 +34,8 @@ public class Game : MonoBehaviour
         FillPile();
         Debug.Log("nmb de joueur : " + numberOfPlayers);
         for(int i = 0; i < numberOfPlayers; i++) { players.Add(new Player()); }
-        currentPlayer = players[0];
+        currentPlayerIndex = 0;
+        
         
         state = PlayerTrowDices;
     }
@@ -60,7 +61,7 @@ public class Game : MonoBehaviour
     }
     public void PlayerTrowDices()
     {
-        bool playerHasStation = currentPlayer.PileMonuments[MonumentName.Station];
+        bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
         for (int i = 0; i < 1 + Convert.ToInt16(playerHasStation); i++)
         {
             dices[i].TrowDice();
@@ -71,7 +72,7 @@ public class Game : MonoBehaviour
     {
         int _result = 0;
         bool _allDicesHaveAResult = true;
-        bool playerHasStation = currentPlayer.PileMonuments[MonumentName.Station];
+        bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
         for (int i = 0; i < 1 + Convert.ToInt16(playerHasStation); i++)
         {
             int _diceResult = dices[i].result;
@@ -97,7 +98,17 @@ public class Game : MonoBehaviour
     }
     public void PaidPlayers()
     {
-    
+        for(int i = 0; i < players.Count; i++)
+        {
+            if (i == currentPlayerIndex) i++;
+            foreach (CardName name in AllCards.CardsData.Keys)
+            {
+                if (AllCards.CardsData[name].color == CardColor.Red && players[i].PileCards[name] > 0) //si c'est un carte rouge et que le joueur la possède
+                {
+                    players[currentPlayerIndex].PaidOtherPlayer(players[i], AllCards.allCards[name].Action());
+                }
+            }
+        }
     }
     public void PlayerBuild()
     {
@@ -115,7 +126,7 @@ public class Game : MonoBehaviour
     //Payement :
 
     //faire les payement (le joueur paye les autres joueur avce des cartes rouge)
-    //rece
+    //recupère l'argent et les effets de ces autres cartes
 
     //Construction :
     //Le joueur choisit d'acheter une carte ou de rien faire
