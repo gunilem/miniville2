@@ -75,7 +75,7 @@ public class Game : MonoBehaviour
 
         if (_allDicesHaveAResult)
         {
-            Debug.Log(waitDiceFinalResult);
+            //Debug.Log(waitDiceFinalResult);
             waitDiceFinalResult -= 10f * Time.deltaTime;
         }
 
