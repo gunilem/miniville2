@@ -11,6 +11,9 @@ public class Game : MonoBehaviour
     [SerializeField] Dice[] dices = new Dice[2];
     List<Player> players = new List<Player>();
     int currentPlayerIndex;
+    int currentDiceResult = 1;
+    int playerWhosWin;
+    CardName currentCardToBuy;
     public Dictionary<CardName, int> PileCards = new Dictionary<CardName, int>();
 
     [Header("Settings")]
@@ -91,10 +94,11 @@ public class Game : MonoBehaviour
         if (waitDiceFinalResult <= 0)
         {
             Debug.Log("result = " + _result);
-            state = PaidPlayers;
+            currentDiceResult = _result;
+            state = PaidOtherPlayers;
         }
     }
-    public void PaidPlayers()
+    public void PaidOtherPlayers()
     {
         for(int i = 0; i < players.Count; i++)
         {
@@ -102,22 +106,145 @@ public class Game : MonoBehaviour
             {
                 foreach (CardName name in AllCards.CardsData.Keys)
                 {
-                    if (AllCards.CardsData[name].color == CardColor.Red && players[i].PileCards[name] > 0) //si c'est un carte rouge et que le joueur la possède
+                    //si c'est un carte rouge, qu'elle a le bon numéro et que le joueur la possède
+                    if (AllCards.CardsData[name].color == CardColor.Red && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult)) 
                     {
-                        for(int y = 0; y < players[i].PileCards[name]; y++)
+                        Debug.Log(string.Format("Player{0} donen argent à Player{1} grâce à ces {2}{3}", currentPlayerIndex, i, players[i].PileCards[name], name));
+                        for (int y = 0; y < players[i].PileCards[name]; y++)
                         {
-                            Debug.Log("Name : " + name);
                             players[currentPlayerIndex].PaidOtherPlayer(players[i], AllCards.allCards[name].Action());
                         }
                     }
+
                 }
             }
         }
-        
-        state = PlayerBuild;
+
+        state = PlayersReceivesMoney;
+    }
+
+    public void PlayersReceivesMoney()
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            if (i == currentPlayerIndex) //si c'est le joueur dont c'est le tour
+            {
+                foreach (CardName name in AllCards.CardsData.Keys)
+                {
+                    //si c'est pas une carte rouge, qu'elle a le bon numéro et que le joueur la possède
+                    if (!(AllCards.CardsData[name].color == CardColor.Red) && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
+                    {
+                        for (int y = 0; y < players[i].PileCards[name]; y++)
+                        {
+                            Debug.Log("Name : " + name);
+                            players[i].Coins += AllCards.allCards[name].Action();
+                        }
+                    }
+
+                }
+            }
+            else //si c'est un joueur dont c'est pas le tour
+            {
+                foreach (CardName name in AllCards.CardsData.Keys)
+                {
+                    //si c'est une carte verte, qu'elle a le bon numéro et que le joueur la possède
+                    if ( AllCards.CardsData[name].color == CardColor.Green && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
+                    {
+                        for (int y = 0; y < players[i].PileCards[name]; y++)
+                        {
+                            Debug.Log("Name : " + name);
+                            players[i].Coins += AllCards.allCards[name].Action();
+                        }
+                    }
+
+                }
+            }
+        }
+        state = WaitForPlayerToSelectCard;
+
+    }
+    public void WaitForPlayerToSelectCard()
+    {
+        bool PAUL_MET_ICI_LA_CONDITION_POUR_DIRE_QUE_LA_CARTE_A_ETE_CHOISI = false;
+        bool PAUL_MET_ICI_LA_CONDITION_POUR_DIRE_QUE_LON_NE_CONSTRUIT_RIEN = false;
+
+        if (PAUL_MET_ICI_LA_CONDITION_POUR_DIRE_QUE_LA_CARTE_A_ETE_CHOISI)
+        {
+            currentCardToBuy = CardName.Forest;
+            state = PlayerBuild;
+        }
+        else if (PAUL_MET_ICI_LA_CONDITION_POUR_DIRE_QUE_LON_NE_CONSTRUIT_RIEN)
+        {
+            state = CheckPlayerHasWon;
+        }
     }
     public void PlayerBuild()
     {
-        
+        var currentPlayer = players[currentPlayerIndex];
+        CardName cardPlayerWantToBuy = currentCardToBuy;
+
+        bool hasBought = currentPlayer.TryBuyCard(cardPlayerWantToBuy);
+        state = CheckPlayerHasWon;
     }
+    public void CheckPlayerHasWon()
+    {
+        var currentPlayer = players[currentPlayerIndex];
+        var hasWon = true;
+
+        foreach (bool monu in currentPlayer.PileMonuments.Values)
+        {
+            if (!monu)
+            {
+                hasWon = false;
+                break;
+            }
+        }
+
+        if (hasWon)
+        {
+            state = EndGame;
+            playerWhosWin = currentPlayerIndex;
+        }
+        else
+        {
+            state = PlayerTrowDices;
+            currentPlayerIndex++;
+        }
+    }
+    public void EndGame()
+    {
+        Debug.Log("Fin du jeu");
+    }
+
+    private void StadiumAction() //chaque joueur donne 2 pièce au joueur qui à cette carte
+    {
+        for(int i = 0; i < players.Count; i++)
+        {
+            if(i != currentPlayerIndex)
+            {
+                players[i].PaidOtherPlayer(players[currentPlayerIndex], 2);
+            }
+        }
+    }
+
+    private void BuisnessCenterAction()
+    {
+        //Ici choisir le joueur à qui échanger une carte
+        int indexPlayerToStealCard = numberOfPlayers - 1;
+        //ici choisi la carte à voler parmis les cartes qu'il à (à savoir celle qui ont 1 ou plus comme value dans leur dictionnaire PileCards )
+        CardName cardToSteal = CardName.Forest;
+        //ici on choisi la carte à donner dans son jeu (à savoir les cartes qui ont plus de 1 dans notre PileCard)
+        CardName cardToGive = CardName.Restaurant;
+
+        players[currentPlayerIndex].GiveCard(cardToSteal);
+        players[currentPlayerIndex].PileCards[cardToGive]--;
+
+        players[indexPlayerToStealCard].GiveCard(cardToGive);
+        players[indexPlayerToStealCard].PileCards[cardToSteal]--;
+
+    }
+
+    private void TVStation() {
+        
+}
 }
