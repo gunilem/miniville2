@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     {
         if(coins >= AllCards.allCards[who].cardData.Cost)
         {
-            PileCards[who]++;
+            GiveCard(who);
             Coins -= AllCards.allCards[who].cardData.Cost;
             return true;
         }
@@ -70,6 +70,11 @@ public class Player : MonoBehaviour
             other.Coins += price;
             this.Coins -= price;
         }
+    }
+    
+    public void GiveCard(CardName who)
+    {
+        PileCards[who]++;
     }
 
 }
