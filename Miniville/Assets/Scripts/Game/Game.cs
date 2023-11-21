@@ -18,8 +18,6 @@ public class Game : MonoBehaviour
     [SerializeField] float waitDiceFinalResult = 50;
 
     delegate void del(); del state;
-    
-
     private void Awake()
     {
         if (instance != null)
@@ -120,23 +118,6 @@ public class Game : MonoBehaviour
     }
     public void PlayerBuild()
     {
-    
-    }
         
-    //Instancier les joueurs
-
-    //Lancer de dés :
-
-    //Joueur lance le dés en fonction de s'il a une gare
-    //peut choisir une fois de relancer s'il à la tour radio
-    //refait un tour s'il fait un double et a le parc d'attraction
-
-    //Payement :
-
-    //faire les payement (le joueur paye les autres joueur avce des cartes rouge)
-    //recupère l'argent et les effets de ces autres cartes
-
-    //Construction :
-    //Le joueur choisit d'acheter une carte ou de rien faire
-
+    }
 }

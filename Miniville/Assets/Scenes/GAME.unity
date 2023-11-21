@@ -282,7 +282,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8916a10b5fcb8634a82dde6fb278aa84, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f2e26dae0c24bf4598a1413d6f464a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &642314286
@@ -333,6 +333,8 @@ MonoBehaviour:
   dices:
   - {fileID: 1095663888}
   - {fileID: 334280342}
+  numberOfPlayers: 1
+  waitDiceFinalResult: 50
 --- !u!114 &642314289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,7 +348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allCardsData:
-  - {fileID: 11400000, guid: d4e61bd393b5a3044af557857dc0c0e8, type: 2}
+  - {fileID: 11400000, guid: 9fd23133d5512fe4c937cb5e27c49cf2, type: 2}
   - {fileID: 11400000, guid: 9dda779fc0744844790902882d6916b3, type: 2}
   - {fileID: 11400000, guid: ce7eca945daa50845ab0eeb92e9bee10, type: 2}
   - {fileID: 11400000, guid: d9c95613852a743448041f92a49a6fd1, type: 2}
@@ -401,7 +403,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8916a10b5fcb8634a82dde6fb278aa84, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f2e26dae0c24bf4598a1413d6f464a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1249235569
