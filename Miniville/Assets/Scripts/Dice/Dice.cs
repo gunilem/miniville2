@@ -9,7 +9,11 @@ public class Dice : MonoBehaviour
 {
     [SerializeField] float gravity = 8f;
     [SerializeField] float torqueForce = 8f;
+    [SerializeField] float throwForce = 2f;
+
     Rigidbody rb;
+
+    public bool throwDice = false;
 
     float xprevious;
     float yprevious;
@@ -28,18 +32,26 @@ public class Dice : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   
+    {
+        if (throwDice)
+        {
+            throwDice = false;
+            TrowDice();
 
+        }
     }
 
     public void TrowDice()
     {
         result = -1;
-        float _xDec = UnityEngine.Random.Range(-0.1f, 0.1f);
-        float _yDec = UnityEngine.Random.Range(-0.1f, 0.1f);
-        float _zDec = UnityEngine.Random.Range(-0.1f, 0.1f);
+        int _xDec = (UnityEngine.Random.Range(0, 2) * 2) - 1;
+        int _yDec = (UnityEngine.Random.Range(0, 2) * 2) - 1;
+        int _zDec = (UnityEngine.Random.Range(0, 2) * 2) - 1;
 
-        rb.AddForce(new Vector3(2f+ _xDec, 3f+ _yDec, 2f + _zDec), ForceMode.Impulse);
+        Vector3 distanceToCenter = new Vector3(0, 7, 0) - transform.position;
+        UnityEngine.Debug.Log(distanceToCenter);
+
+        rb.AddForce(distanceToCenter * throwForce, ForceMode.Impulse);
         rb.AddTorque(Vector3.left* torqueForce);
 
     }
