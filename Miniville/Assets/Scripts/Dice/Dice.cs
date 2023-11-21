@@ -15,32 +15,39 @@ public class Dice : MonoBehaviour
     float yprevious;
     float zprevious;
 
+    Vector3 posStart;
+
     public int result;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+
         xprevious = transform.position.x;
         yprevious = transform.position.y;
         zprevious = transform.position.z;
+
+        posStart = transform.position;
+
         result = -1;
     }
 
     // Update is called once per frame
     void Update()
-    {   
+    {
 
     }
 
     public void TrowDice()
     {
+        transform.position = posStart;
         result = -1;
         float _xDec = UnityEngine.Random.Range(-0.1f, 0.1f);
         float _yDec = UnityEngine.Random.Range(-0.1f, 0.1f);
         float _zDec = UnityEngine.Random.Range(-0.1f, 0.1f);
 
-        rb.AddForce(new Vector3(2f+ _xDec, 3f+ _yDec, 2f + _zDec), ForceMode.Impulse);
-        rb.AddTorque(Vector3.left* torqueForce);
+        rb.AddForce(new Vector3(2f + _xDec, 3f + _yDec, 2f + _zDec), ForceMode.Impulse);
+        rb.AddTorque(Vector3.left * torqueForce);
 
     }
 
@@ -61,7 +68,7 @@ public class Dice : MonoBehaviour
     }
 
     void Gravity()
-    { 
+    {
         rb.AddForce(Vector3.down * gravity * Time.deltaTime);
     }
 
@@ -95,7 +102,7 @@ public class Dice : MonoBehaviour
         rightVector.y = Mathf.Round(rightVector.y);
         rightVector.z = Mathf.Round(rightVector.z);
 
-        
+
         if (forwardVector.x == 0f && forwardVector.y == -1f && forwardVector.z == 0f)
         {
             DiceSetResult(2);

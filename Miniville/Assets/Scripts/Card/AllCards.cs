@@ -44,4 +44,13 @@ public class AllCards : MonoBehaviour
 
 
     }
+
+    static public bool HaveTheRightDice(CardName name, int nmb)
+    {
+        foreach (int dice in CardsData[name].Dice) //si c'est le bon dice
+        {
+            if (dice == nmb) return true;
+        }
+        return false;
+    }
 }
