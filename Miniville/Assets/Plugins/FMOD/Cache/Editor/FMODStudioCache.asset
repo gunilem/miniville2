@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6063499498236961151
+--- !u!114 &-9109693878314424357
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,22 +9,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/DiceBounce/DICE_Velocity
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Card/Card_ToFront
   m_EditorClassIdentifier: 
-  Name: DICE_Velocity
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 3046158843
-    data2: 3590458579
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &-5648788109449789921
+  Path: event:/Card/Card_ToFront
+  Guid:
+    Data1: -288938771
+    Data2: 1230372562
+    Data3: 945906331
+    Data4: 1437999036
+  Banks:
+  - {fileID: -3915689307403356882}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1100
+--- !u!114 &-8371054606587189793
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,72 +46,17 @@ MonoBehaviour:
     Data3: -1614584397
     Data4: -1168958620
   Banks:
-  - {fileID: -3338250980206366071}
+  - {fileID: -3915689307403356882}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
   Parameters:
-  - {fileID: -2344467403409945144}
-  - {fileID: -223660399644891924}
+  - {fileID: -6566933067466152159}
+  - {fileID: -7440290795985804602}
   MinDistance: 15
   MaxDistance: 30
   Length: 0
---- !u!114 &-5640450943692445632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Coin/CoinDisappear
-  m_EditorClassIdentifier: 
-  Path: event:/Coin/CoinDisappear
-  Guid:
-    Data1: -1870942415
-    Data2: 1157077026
-    Data3: 132898476
-    Data4: 611379601
-  Banks:
-  - {fileID: -3338250980206366071}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-3532744271906456108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/DiceBounce
-  m_EditorClassIdentifier: 
-  Path: event:/DiceBounce
-  Guid:
-    Data1: -160601671
-    Data2: 1155242952
-    Data3: 1399843763
-    Data4: 1367660907
-  Banks:
-  - {fileID: -3338250980206366071}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters:
-  - {fileID: -6063499498236961151}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 46
---- !u!114 &-3338250980206366071
+--- !u!114 &-7785753185992851424
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,48 +66,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.bank
+  m_Name: bank:/Master.strings.bank
   m_EditorClassIdentifier: 
-  Path: ../FMOD/Build/Desktop/Master.bank
-  Name: Master
-  StudioPath: bank:/Master
-<<<<<<< Updated upstream
-  lastModified: 638360950660539210
-=======
-  lastModified: 638360763430080576
->>>>>>> Stashed changes
+  Path: ../FMOD/Build/Desktop/Master.strings.bank
+  Name: Master.strings
+  StudioPath: bank:/Master.strings
+  lastModified: 638361558549760709
   FileSizes:
   - Name: Desktop
-    Value: 123040
+    Value: 1222
   Exists: 1
---- !u!114 &-2797692677869311508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Card/Card_ToBack
-  m_EditorClassIdentifier: 
-  Path: event:/Card/Card_ToBack
-  Guid:
-    Data1: -90190325
-    Data2: 1149927827
-    Data3: -762677864
-    Data4: -928406425
-  Banks:
-  - {fileID: -3338250980206366071}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 940
---- !u!114 &-2344467403409945144
+--- !u!114 &-7440290795985804602
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -185,27 +102,7 @@ MonoBehaviour:
   - Coin
   - Table
   Exists: 1
---- !u!114 &-2232643552111811661
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.strings.bank
-  m_EditorClassIdentifier: 
-  Path: ../FMOD/Build/Desktop/Master.strings.bank
-  Name: Master.strings
-  StudioPath: bank:/Master.strings
-  lastModified: 638360950660539210
-  FileSizes:
-  - Name: Desktop
-    Value: 1222
-  Exists: 1
---- !u!114 &-223660399644891924
+--- !u!114 &-6566933067466152159
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -229,6 +126,78 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-5936960178602377550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/DiceBounce/DICE_Velocity
+  m_EditorClassIdentifier: 
+  Name: DICE_Velocity
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3046158843
+    data2: 3590458579
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-3915689307403356882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: ../FMOD/Build/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 638361558549760709
+  FileSizes:
+  - Name: Desktop
+    Value: 123040
+  Exists: 1
+--- !u!114 &-1977355640426630244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/DiceBounce
+  m_EditorClassIdentifier: 
+  Path: event:/DiceBounce
+  Guid:
+    Data1: -160601671
+    Data2: 1155242952
+    Data3: 1399843763
+    Data4: 1367660907
+  Banks:
+  - {fileID: -3915689307403356882}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -5936960178602377550}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 46
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,28 +211,24 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: -2232643552111811661}
-  - {fileID: -3338250980206366071}
+  - {fileID: -7785753185992851424}
+  - {fileID: -3915689307403356882}
   EditorEvents:
-  - {fileID: -5640450943692445632}
-  - {fileID: -3532744271906456108}
-  - {fileID: 7197927584482588374}
-  - {fileID: -5648788109449789921}
-  - {fileID: -2797692677869311508}
-  - {fileID: 5935678905721923095}
-  - {fileID: 7881737589843250316}
+  - {fileID: 1319151817590423740}
+  - {fileID: 3863620654660558283}
+  - {fileID: 2545317227694388924}
+  - {fileID: -8371054606587189793}
+  - {fileID: -1977355640426630244}
+  - {fileID: -9109693878314424357}
+  - {fileID: 2353655039098928380}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -3338250980206366071}
+  - {fileID: -3915689307403356882}
   StringsBanks:
-  - {fileID: -2232643552111811661}
-<<<<<<< Updated upstream
-  cacheTime: 638360950660539210
-=======
-  cacheTime: 638360763430080576
->>>>>>> Stashed changes
+  - {fileID: -7785753185992851424}
+  cacheTime: 638361558549760709
   cacheVersion: 131608
---- !u!114 &5935678905721923095
+--- !u!114 &1319151817590423740
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -273,24 +238,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Card/Card_Flip
+  m_Name: event:/Card/Card_ToBack
   m_EditorClassIdentifier: 
-  Path: event:/Card/Card_Flip
+  Path: event:/Card/Card_ToBack
   Guid:
-    Data1: 923947805
-    Data2: 1185915901
-    Data3: 1264450705
-    Data4: 1928124141
+    Data1: -90190325
+    Data2: 1149927827
+    Data3: -762677864
+    Data4: -928406425
   Banks:
-  - {fileID: -3338250980206366071}
+  - {fileID: -3915689307403356882}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 288
---- !u!114 &7197927584482588374
+  Length: 940
+--- !u!114 &2353655039098928380
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -309,7 +274,7 @@ MonoBehaviour:
     Data3: -1548766281
     Data4: -1125390999
   Banks:
-  - {fileID: -3338250980206366071}
+  - {fileID: -3915689307403356882}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -317,7 +282,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &7881737589843250316
+--- !u!114 &2545317227694388924
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -327,20 +292,47 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Card/Card_ToFront
+  m_Name: event:/Coin/CoinDisappear
   m_EditorClassIdentifier: 
-  Path: event:/Card/Card_ToFront
+  Path: event:/Coin/CoinDisappear
   Guid:
-    Data1: -288938771
-    Data2: 1230372562
-    Data3: 945906331
-    Data4: 1437999036
+    Data1: -1870942415
+    Data2: 1157077026
+    Data3: 132898476
+    Data4: 611379601
   Banks:
-  - {fileID: -3338250980206366071}
+  - {fileID: -3915689307403356882}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 1100
+  Length: 0
+--- !u!114 &3863620654660558283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Card/Card_Flip
+  m_EditorClassIdentifier: 
+  Path: event:/Card/Card_Flip
+  Guid:
+    Data1: 923947805
+    Data2: 1185915901
+    Data3: 1264450705
+    Data4: 1928124141
+  Banks:
+  - {fileID: -3915689307403356882}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 288
