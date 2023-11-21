@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
     //Payement :
 
     //faire les payement (le joueur paye les autres joueur avce des cartes rouge)
-    //rece
+    //cartes bleu et violettes : uniquement pour le joueur dont c'est le tour / cartes verte tous les joueurs 
 
     //Construction :
     //Le joueur choisit d'acheter une carte ou de rien faire

@@ -109,7 +109,7 @@ public class Game : MonoBehaviour
                     //si c'est un carte rouge, qu'elle a le bon numéro et que le joueur la possède
                     if (AllCards.CardsData[name].color == CardColor.Red && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult)) 
                     {
-                        Debug.Log(string.Format("Player{0} donen argent à Player{1} grâce à ces {2}{3}", currentPlayerIndex, i, players[i].PileCards[name], name));
+                        Debug.Log(string.Format("Player{0} donen argent à Player{1} grâce à ces {2}{3}", currentPlayerIndex + 1, i + 1, players[i].PileCards[name], name));
                         for (int y = 0; y < players[i].PileCards[name]; y++)
                         {
                             players[currentPlayerIndex].PaidOtherPlayer(players[i], AllCards.allCards[name].Action());
@@ -136,7 +136,7 @@ public class Game : MonoBehaviour
                     {
                         for (int y = 0; y < players[i].PileCards[name]; y++)
                         {
-                            Debug.Log("Name : " + name);
+                            Debug.Log(string.Format("Player{0} récuperre argent grâce à {1}", currentPlayerIndex + 1, name));
                             players[i].Coins += AllCards.allCards[name].Action();
                         }
                     }
@@ -152,7 +152,7 @@ public class Game : MonoBehaviour
                     {
                         for (int y = 0; y < players[i].PileCards[name]; y++)
                         {
-                            Debug.Log("Name : " + name);
+                            Debug.Log(string.Format("Player{0} récuperre argent grâce à {1}", i + 1, name));
                             players[i].Coins += AllCards.allCards[name].Action();
                         }
                     }

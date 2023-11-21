@@ -20,7 +20,7 @@ public abstract class CardScript
 public class TakeCoins : CardScript
 {
     
-    int income;
+    public int income;
 
     public TakeCoins(CardData _cardData, int _income) : base(_cardData)
     {

@@ -31,6 +31,9 @@ public class AllCards : MonoBehaviour
         allCards.Add(CardName.Store, new TakeCoins(CardsData[CardName.Store], 3)); //supérette
         allCards.Add(CardName.Forest, new TakeCoins(CardsData[CardName.Forest], 1)); //Forest
 
+        allCards.Add(CardName.Stadium, new TakeCoins(CardsData[CardName.Stadium], 0)); //Stade
+        allCards.Add(CardName.BusinessCenter, new TakeCoins(CardsData[CardName.BusinessCenter], 0)); //Buisness
+        allCards.Add(CardName.TVStation, new TakeCoins(CardsData[CardName.TVStation], 0)); //Tv Station
 
 
         allCards.Add(CardName.Dairy, new CoinsFromType(CardsData[CardName.Dairy], 3, CardType.Animal)); //Fromagerie
