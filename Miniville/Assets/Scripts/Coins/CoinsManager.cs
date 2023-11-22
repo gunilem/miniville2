@@ -9,6 +9,9 @@ public class CoinsManager : MonoBehaviour
     public GameObject coin5;
     public GameObject coin10;
 
+    [SerializeField] float ejectMaxSpeed = 500f;
+    [SerializeField] float ejectMinSpeed = 200f;
+
     public List<Player_TEST> players = new List<Player_TEST>();
     private List<int> prePlayersMoney = new List<int>();
     public bool updatePlayer;
@@ -222,8 +225,8 @@ public class CoinsManager : MonoBehaviour
             GameObject coin = coinsToRemove[i];
 
             coin.GetComponent<MeshCollider>().enabled = false;
-            coin.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-10, 11), Random.Range(1, 11), Random.Range(-10, 11)).normalized * Random.Range(500, 1000), ForceMode.Impulse);
-            coin.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(1, 11), Random.Range(1, 11), Random.Range(1, 11)).normalized * Random.Range(500, 1000));
+            coin.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-10, 11), Random.Range(1, 11), Random.Range(-10, 11)).normalized * Random.Range(ejectMinSpeed, ejectMaxSpeed), ForceMode.Impulse);
+            coin.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(1, 11), Random.Range(1, 11), Random.Range(1, 11)).normalized * Random.Range(ejectMinSpeed, ejectMaxSpeed));
 
             StartCoroutine(MyCoroutine(coin));
         }
