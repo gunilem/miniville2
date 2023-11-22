@@ -35,7 +35,6 @@ public class AllCards : MonoBehaviour
         allCards.Add(CardName.BusinessCenter, new TakeCoins(CardsData[CardName.BusinessCenter], 0)); //Buisness
         allCards.Add(CardName.TVStation, new TakeCoins(CardsData[CardName.TVStation], 0)); //Tv Station
 
-
         allCards.Add(CardName.Dairy, new CoinsFromType(CardsData[CardName.Dairy], 3, CardType.Animal)); //Fromagerie
         allCards.Add(CardName.FurnitureFactory, new CoinsFromType(CardsData[CardName.FurnitureFactory], 3, CardType.Gear)); //Frabique de meubles
         allCards.Add(CardName.Mine, new TakeCoins(CardsData[CardName.Mine], 5)); //Mine
