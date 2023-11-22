@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="AudioFile" id="{c820ec20-a287-443c-ba9c-dfa14a7b2587}">
 		<property name="assetPath">
-			<value>Dice_Bounce_3.wav</value>
+			<value>Dice/Dice_Bounce_3.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>48</value>
