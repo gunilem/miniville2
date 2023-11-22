@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -9,9 +10,9 @@ public class Game : MonoBehaviour
     public static Game instance;
     [Header("Data")]
     [SerializeField] Dice[] dices = new Dice[2];
-    List<Player> players = new List<Player>();
-    int currentPlayerIndex;
-    int currentDiceResult = 1;
+    public List<Player> players = new List<Player>();
+    public int currentPlayerIndex;
+    int currentDiceResult = 11;
     int playerWhosWin;
     CardName currentCardToBuy;
     public Dictionary<CardName, int> PileCards = new Dictionary<CardName, int>();
@@ -35,9 +36,10 @@ public class Game : MonoBehaviour
         FillPile();
         for(int i = 0; i < numberOfPlayers; i++) { players.Add(new Player()); }
         currentPlayerIndex = 0;
-        players[2].PileCards[CardName.CoffeeShop] = 10;
-        
-        
+        players[0].PileCards[CardName.WheatFields] = 5;
+        players[0].PileCards[CardName.VegetableStore] = 1;
+
+
         state = PlayerTrowDices;
     }
     void Update()
@@ -94,7 +96,7 @@ public class Game : MonoBehaviour
         if (waitDiceFinalResult <= 0)
         {
             Debug.Log("result = " + _result);
-            currentDiceResult = _result;
+            //currentDiceResult = _result;
             state = PaidOtherPlayers;
         }
     }
@@ -134,10 +136,17 @@ public class Game : MonoBehaviour
                     //si c'est pas une carte rouge, qu'elle a le bon numéro et que le joueur la possède
                     if (!(AllCards.CardsData[name].color == CardColor.Red) && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
                     {
-                        for (int y = 0; y < players[i].PileCards[name]; y++)
+                        if (AllCards.CardsData[name].color == CardColor.Purple) PurpleCardAction(name); //si c'est une carte violette
+                        else //si c'est une carte bleu ou verte
                         {
-                            Debug.Log(string.Format("Player{0} récuperre argent grâce à {1}", currentPlayerIndex + 1, name));
-                            players[i].Coins += AllCards.allCards[name].Action();
+                            for (int y = 0; y < players[i].PileCards[name]; y++)
+                            {
+                                Debug.Log(string.Format("Player{0} récuperre argent grâce à {1}", currentPlayerIndex + 1, name));
+                                AllCards.allCards[name].index = i;
+                                players[i].Coins += AllCards.allCards[name].Action();
+                                Debug.Log(string.Format("Player{0} à {1} argent ", currentPlayerIndex + 1, players[currentPlayerIndex].Coins));
+
+                            }
                         }
                     }
 
@@ -152,7 +161,7 @@ public class Game : MonoBehaviour
                     {
                         for (int y = 0; y < players[i].PileCards[name]; y++)
                         {
-                            Debug.Log(string.Format("Player{0} récuperre argent grâce à {1}", i + 1, name));
+                            AllCards.allCards[name].index = i;
                             players[i].Coins += AllCards.allCards[name].Action();
                         }
                     }
@@ -216,6 +225,21 @@ public class Game : MonoBehaviour
         Debug.Log("Fin du jeu");
     }
 
+    private void PurpleCardAction(CardName name)
+    {
+        if (name == CardName.Stadium)
+            StadiumAction();
+        else if (name == CardName.BusinessCenter)
+            BuisnessCenterAction();
+        else if (name == CardName.TVStation)
+            TVStationAction();
+        else
+        {
+            Debug.LogError("isnt a purple card");
+        }
+
+    }
+
     private void StadiumAction() //chaque joueur donne 2 pièce au joueur qui à cette carte
     {
         for(int i = 0; i < players.Count; i++)
@@ -244,7 +268,8 @@ public class Game : MonoBehaviour
 
     }
 
-    private void TVStation() {
-        
-}
+    private void TVStationAction() {
+        int indexPlayerToStealCoins = numberOfPlayers - 1; //Ici choisir le joueur à qui voler de l'argent (faire attention à ce que ce ne soit pas le joueur qui joue actuellement)
+        players[indexPlayerToStealCoins].PaidOtherPlayer(players[currentPlayerIndex],5);
+    }
 }
