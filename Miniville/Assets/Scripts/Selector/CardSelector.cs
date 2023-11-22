@@ -83,7 +83,7 @@ public class CardSelector : MonoBehaviour
         if (isRotated)
         {
             isRotated = false;
-            Selectedcard.Rotate(Vector3.right, 180);
+            Selectedcard.Rotate(Vector3.forward, 180);
         }
         canva.SetActive(false);
 
@@ -98,7 +98,7 @@ public class CardSelector : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask))
         {
-            Selectedcard.Rotate(Vector3.right, 180);
+            Selectedcard.Rotate(Vector3.forward, 180);
             isRotated = !isRotated;
 
             //SFX

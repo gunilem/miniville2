@@ -9,45 +9,50 @@ public class Dice : MonoBehaviour
 {
     [SerializeField] float gravity = 8f;
     [SerializeField] float torqueForce = 8f;
+    [SerializeField] float throwForce = 2f;
+
     Rigidbody rb;
+
+    public bool throwDice = false;
 
     float xprevious;
     float yprevious;
     float zprevious;
-
-    Vector3 posStart;
 
     public int result;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-
         xprevious = transform.position.x;
         yprevious = transform.position.y;
         zprevious = transform.position.z;
-
-        posStart = transform.position;
-
         result = -1;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (throwDice)
+        {
+            throwDice = false;
+            TrowDice();
 
+        }
     }
 
     public void TrowDice()
     {
-        transform.position = posStart;
         result = -1;
-        float _xDec = UnityEngine.Random.Range(-0.1f, 0.1f);
-        float _yDec = UnityEngine.Random.Range(-0.1f, 0.1f);
-        float _zDec = UnityEngine.Random.Range(-0.1f, 0.1f);
+        int _xDec = (UnityEngine.Random.Range(0, 2) * 2) - 1;
+        int _yDec = (UnityEngine.Random.Range(0, 2) * 2) - 1;
+        int _zDec = (UnityEngine.Random.Range(0, 2) * 2) - 1;
 
-        rb.AddForce(new Vector3(2f + _xDec, 3f + _yDec, 2f + _zDec), ForceMode.Impulse);
-        rb.AddTorque(Vector3.left * torqueForce);
+        Vector3 distanceToCenter = new Vector3(0, 7, 0) - transform.position;
+        UnityEngine.Debug.Log(distanceToCenter);
+
+        rb.AddForce(distanceToCenter * throwForce, ForceMode.Impulse);
+        rb.AddTorque(Vector3.left* torqueForce);
 
     }
 
@@ -68,7 +73,7 @@ public class Dice : MonoBehaviour
     }
 
     void Gravity()
-    {
+    { 
         rb.AddForce(Vector3.down * gravity * Time.deltaTime);
     }
 
@@ -102,7 +107,7 @@ public class Dice : MonoBehaviour
         rightVector.y = Mathf.Round(rightVector.y);
         rightVector.z = Mathf.Round(rightVector.z);
 
-
+        
         if (forwardVector.x == 0f && forwardVector.y == -1f && forwardVector.z == 0f)
         {
             DiceSetResult(2);
