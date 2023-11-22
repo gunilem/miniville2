@@ -64,6 +64,7 @@ public class Game : MonoBehaviour
     }
     public void PlayerTrowDices()
     {
+        Debug.Log("Nombre de monument : " + players[currentPlayerIndex].PileMonuments.Count);
         bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
         for (int i = 0; i < 1 + Convert.ToInt16(playerHasStation); i++)
         {
