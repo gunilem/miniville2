@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,15 +12,32 @@ public class Game : MonoBehaviour
     [Header("Data")]
     [SerializeField] Dice[] dices = new Dice[2];
     public List<Player> players = new List<Player>();
-    public int currentPlayerIndex;
+    [HideInInspector]public int currentPlayerIndex;
     int currentDiceResult = 11;
     int playerWhosWin;
     CardName currentCardToBuy;
     public Dictionary<CardName, int> PileCards = new Dictionary<CardName, int>();
+    Dictionary<CardName, GameObject> cardObjects = new Dictionary<CardName, GameObject>();
 
     [Header("Settings")]
     [SerializeField][Range(1,4)] int numberOfPlayers = 1;
     [SerializeField] float waitDiceFinalResult = 50;
+
+    [SerializeField] BoardCardManager boardCardManager;
+    [SerializeField] PlayerCardManager[] playerCardManagers;
+
+    [Header("cardDisplay")]
+    [SerializeField] GameObject cardPrefab;
+    [SerializeField] Transform cardContent;
+    public float xOffSet = 1.5f;
+    public float yOffSet = 2f;
+
+    public float cardSizeMultiplier = 1f;
+
+    int x = 0;
+    int z = 0;
+
+    public int cardPerRow = 5;
 
     delegate void del(); del state;
     private void Awake()
@@ -34,10 +52,12 @@ public class Game : MonoBehaviour
     void Start()
     {
         FillPile();
-        for(int i = 0; i < numberOfPlayers; i++) { players.Add(new Player()); }
+        
         currentPlayerIndex = 0;
         players[0].PileCards[CardName.WheatFields] = 5;
         players[0].PileCards[CardName.VegetableStore] = 1;
+
+        ReloadCard();
 
 
         state = PlayerTrowDices;
@@ -102,7 +122,7 @@ public class Game : MonoBehaviour
     }
     public void PaidOtherPlayers()
     {
-        for(int i = 0; i < players.Count; i++)
+        for(int i = 0; i < numberOfPlayers; i++)
         {
             if (i != currentPlayerIndex)
             {
@@ -127,7 +147,7 @@ public class Game : MonoBehaviour
 
     public void PlayersReceivesMoney()
     {
-        for (int i = 0; i < players.Count; i++)
+        for (int i = 0; i < numberOfPlayers; i++)
         {
             if (i == currentPlayerIndex) //si c'est le joueur dont c'est le tour
             {
@@ -240,7 +260,7 @@ public class Game : MonoBehaviour
 
     private void StadiumAction() //chaque joueur donne 2 pièce au joueur qui à cette carte
     {
-        for(int i = 0; i < players.Count; i++)
+        for(int i = 0; i < numberOfPlayers; i++)
         {
             if(i != currentPlayerIndex)
             {
@@ -270,4 +290,51 @@ public class Game : MonoBehaviour
         int indexPlayerToStealCoins = numberOfPlayers - 1; //Ici choisir le joueur à qui voler de l'argent (faire attention à ce que ce ne soit pas le joueur qui joue actuellement)
         players[indexPlayerToStealCoins].PaidOtherPlayer(players[currentPlayerIndex],5);
     }
+
+    void ReloadCard()
+    {
+        List<CardName> cards = PileCards.Keys.ToList<CardName>();
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (PileCards[cards[i]] != 0)
+            {
+                if (!cardObjects.ContainsKey(cards[i]))
+                {
+                    GameObject card = Instantiate(cardPrefab, cardContent);
+                    card.transform.localScale *= cardSizeMultiplier;
+                    card.transform.position += cardContent.right * (x % cardPerRow) * xOffSet * cardSizeMultiplier + cardContent.forward * ((int)(z / cardPerRow)) * yOffSet * cardSizeMultiplier;
+                    
+
+                    card.GetComponent<CardDisplayData>().CardName = cards[i];
+
+                    ChangeMaterial(AllCards.CardsData[cards[i]].material, card);
+
+                    cardObjects[cards[i]] = card;
+                    x++;
+                    z++;
+                }
+                else
+                {
+                    cardObjects[cards[i]].transform.position += cardContent.right * (x % cardPerRow) * xOffSet * cardSizeMultiplier + cardContent.forward * ((int)(z / cardPerRow)) * yOffSet * cardSizeMultiplier;
+                }
+
+
+            }
+            else if (cardObjects.ContainsKey(cards[i]))
+            {
+                Destroy(cardObjects[cards[i]]);
+                cardObjects.Remove(cards[i]);
+                x--;
+                z--;
+            }
+        }
+    }
+    void ChangeMaterial(Material material, GameObject go)
+    {
+        Material[] materialsArray = go.GetComponent<MeshRenderer>().materials;
+        materialsArray[2] = material;
+        go.GetComponent<MeshRenderer>().materials = materialsArray;
+    }
+
 }
