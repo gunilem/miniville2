@@ -55,12 +55,10 @@ public class CoinsFromType : CardScript
             if (AllCards.CardsData[name].type == cardType)//si c'est une carte avec le bon type
             {
                 numberOfTypeCard += Game.instance.players[index].PileCards[name];
-                Debug.Log("Joueur" + (index + 1) + " à " + Game.instance.players[index].PileCards[name] + " " + name);
             }
 
         }
         
-        Debug.Log(string.Format("J'ajoute {0} coins à joueur {1}", income * numberOfTypeCard, index));
         //verifier le nombre de carte du type cardType et multiplier income par ça
         return income * numberOfTypeCard;
     }

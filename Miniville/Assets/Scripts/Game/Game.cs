@@ -95,8 +95,7 @@ public class Game : MonoBehaviour
 
         if (waitDiceFinalResult <= 0)
         {
-            Debug.Log("result = " + _result);
-            //currentDiceResult = _result;
+            currentDiceResult = _result;
             state = PaidOtherPlayers;
         }
     }
@@ -141,10 +140,8 @@ public class Game : MonoBehaviour
                         {
                             for (int y = 0; y < players[i].PileCards[name]; y++)
                             {
-                                Debug.Log(string.Format("Player{0} récuperre argent grâce à {1}", currentPlayerIndex + 1, name));
                                 AllCards.allCards[name].index = i;
                                 players[i].Coins += AllCards.allCards[name].Action();
-                                Debug.Log(string.Format("Player{0} à {1} argent ", currentPlayerIndex + 1, players[currentPlayerIndex].Coins));
 
                             }
                         }
