@@ -435,6 +435,8 @@ MonoBehaviour:
   cardPerRow: 5
   coinInstantiatePos: {fileID: 2125582098}
   diceThrowingPos: {fileID: 435395777}
+  firstThrow: 1
+  replay: 0
   Coins1: {fileID: 6471673602588368082, guid: b76d4524677f8b1459325744d67bf7cc, type: 3}
   Coins5: {fileID: 5324038775222598575, guid: 5bc68dc31d3869c4fba95873e48188e8, type: 3}
   Coins10: {fileID: 609097897958673743, guid: 21c210d886399374ca45a936a350b340, type: 3}
@@ -1814,7 +1816,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.8
+  m_fontSize: 59.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2018,7 +2020,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coins: 0
   coinsAtStart: 3
-  m_TextMeshPro: {fileID: 1323789643}
+  m_TextMeshPro: {fileID: 1063697404}
   cardPrefab: {fileID: 4099412203085230699, guid: 8903a7788bab256449a9a6ad0041fc4a, type: 3}
   cardContent: {fileID: 754403404}
   xOffSet: 1.5
@@ -2029,6 +2031,8 @@ MonoBehaviour:
   cardPerRow: 5
   coinInstantiatePos: {fileID: 1108660076}
   diceThrowingPos: {fileID: 1268897872}
+  firstThrow: 1
+  replay: 0
   Coins1: {fileID: 6471673602588368082, guid: b76d4524677f8b1459325744d67bf7cc, type: 3}
   Coins5: {fileID: 5324038775222598575, guid: 5bc68dc31d3869c4fba95873e48188e8, type: 3}
   Coins10: {fileID: 609097897958673743, guid: 21c210d886399374ca45a936a350b340, type: 3}
@@ -2379,7 +2383,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.8
+  m_fontSize: 59.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2917,7 +2921,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.8
+  m_fontSize: 59.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3166,7 +3170,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.8
+  m_fontSize: 59.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3605,6 +3609,7 @@ MonoBehaviour:
   - {fileID: 1646393212}
   - {fileID: 1698646579}
   currentPlayerIndex: 0
+  currentDiceResult: 11
   numberOfPlayers: 4
   cardPrefab: {fileID: 4099412203085230699, guid: 8903a7788bab256449a9a6ad0041fc4a, type: 3}
   cardContent: {fileID: 252157103}
@@ -3865,7 +3870,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coins: 0
   coinsAtStart: 3
-  m_TextMeshPro: {fileID: 1063697404}
+  m_TextMeshPro: {fileID: 817837443}
   cardPrefab: {fileID: 4099412203085230699, guid: 8903a7788bab256449a9a6ad0041fc4a, type: 3}
   cardContent: {fileID: 651024408}
   xOffSet: 1.5
@@ -3876,6 +3881,8 @@ MonoBehaviour:
   cardPerRow: 5
   coinInstantiatePos: {fileID: 610692092}
   diceThrowingPos: {fileID: 126523234}
+  firstThrow: 1
+  replay: 0
   Coins1: {fileID: 6471673602588368082, guid: b76d4524677f8b1459325744d67bf7cc, type: 3}
   Coins5: {fileID: 5324038775222598575, guid: 5bc68dc31d3869c4fba95873e48188e8, type: 3}
   Coins10: {fileID: 609097897958673743, guid: 21c210d886399374ca45a936a350b340, type: 3}
@@ -4162,7 +4169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coins: 0
   coinsAtStart: 3
-  m_TextMeshPro: {fileID: 817837443}
+  m_TextMeshPro: {fileID: 1323789643}
   cardPrefab: {fileID: 4099412203085230699, guid: 8903a7788bab256449a9a6ad0041fc4a, type: 3}
   cardContent: {fileID: 1556237135}
   xOffSet: 1.5
@@ -4173,6 +4180,8 @@ MonoBehaviour:
   cardPerRow: 5
   coinInstantiatePos: {fileID: 2017656732}
   diceThrowingPos: {fileID: 439055185}
+  firstThrow: 1
+  replay: 0
   Coins1: {fileID: 6471673602588368082, guid: b76d4524677f8b1459325744d67bf7cc, type: 3}
   Coins5: {fileID: 5324038775222598575, guid: 5bc68dc31d3869c4fba95873e48188e8, type: 3}
   Coins10: {fileID: 609097897958673743, guid: 21c210d886399374ca45a936a350b340, type: 3}
