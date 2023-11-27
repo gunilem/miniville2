@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a35b3461e3d2a64f8de8dfa80aff199, type: 3}
   m_Name: Stadium
   m_EditorClassIdentifier: 
-  cardName: 6
+  cardName: 7
   type: 5
   color: 3
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: e74b38f23bf877f41860fc11e8a51278, type: 2}
   Dice: 06000000
   Cost: 6

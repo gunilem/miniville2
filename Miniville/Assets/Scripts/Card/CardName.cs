@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum CardName
 {
+    None,
     WheatFields,
     Farm,
     Bakery,

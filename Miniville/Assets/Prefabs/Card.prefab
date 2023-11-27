@@ -112,9 +112,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1376cb167a0ba3347922246d00d36bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardName: 0
+  cardName: 0
+  monumentName: 0
+  player: {fileID: 0}
   nbOfCard: 0
-  face: {fileID: 2100000, guid: 23b6832838205b84b9211703cd183e9f, type: 2}
+  size: 0
 --- !u!65 &-3022634057144224338
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -130,7 +132,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

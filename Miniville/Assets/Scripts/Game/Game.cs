@@ -9,22 +9,25 @@ using UnityEngine.UIElements;
 public class Game : MonoBehaviour
 {
     public static Game instance;
+
+    [SerializeField] GameObject oneDiceUi;
+    [SerializeField] GameObject twoDiceUi;
+    [SerializeField] GameObject toNextStateUi;
+
+    int DiceThrown;
+
+
     [Header("Data")]
     [SerializeField] Dice[] dices = new Dice[2];
     public List<Player> players = new List<Player>();
     [HideInInspector]public int currentPlayerIndex;
     int currentDiceResult = 11;
     int playerWhosWin;
-    CardName currentCardToBuy;
     public Dictionary<CardName, int> PileCards = new Dictionary<CardName, int>();
     Dictionary<CardName, GameObject> cardObjects = new Dictionary<CardName, GameObject>();
 
     [Header("Settings")]
     [SerializeField][Range(1,4)] int numberOfPlayers = 1;
-    [SerializeField] float waitDiceFinalResult = 50;
-
-    [SerializeField] BoardCardManager boardCardManager;
-    [SerializeField] PlayerCardManager[] playerCardManagers;
 
     [Header("cardDisplay")]
     [SerializeField] GameObject cardPrefab;
@@ -38,6 +41,10 @@ public class Game : MonoBehaviour
     int z = 0;
 
     public int cardPerRow = 5;
+
+    public bool ToNextState = false;
+
+    public bool isPurchasing = false;
 
     delegate void del(); del state;
     private void Awake()
@@ -54,8 +61,6 @@ public class Game : MonoBehaviour
         FillPile();
         
         currentPlayerIndex = 0;
-        players[0].PileCards[CardName.WheatFields] = 5;
-        players[0].PileCards[CardName.VegetableStore] = 1;
 
         ReloadCard();
 
@@ -78,26 +83,40 @@ public class Game : MonoBehaviour
         }
     }
 
-    public void Wait()
-    {
 
-    }
     public void PlayerTrowDices()
     {
-        Debug.Log("Nombre de monument : " + players[currentPlayerIndex].PileMonuments.Count);
         bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
-        for (int i = 0; i < 1 + Convert.ToInt16(playerHasStation); i++)
+        if (playerHasStation) twoDiceUi.SetActive(true);
+        else oneDiceUi.SetActive(true);
+    }
+
+    public void ThrowDice(int nbOFDice)
+    {
+        if (nbOFDice == 1)
         {
-            dices[i].TrowDice();
+            dices[0].ResetDice(players[currentPlayerIndex].diceThrowingPos.transform.position);
+            dices[1].ResetDice(dices[1].DicePosAtBegin);
+            dices[0].TrowDice();
         }
+        else
+        {
+            dices[0].ResetDice(players[currentPlayerIndex].diceThrowingPos.transform.position);
+            dices[0].TrowDice();
+            dices[1].ResetDice(players[currentPlayerIndex].diceThrowingPos.transform.position);
+            dices[1].TrowDice();
+        }
+        twoDiceUi.SetActive(false);
+        oneDiceUi.SetActive(false);
+        DiceThrown = nbOFDice;
         state = WaitForDiceResult;
     }
+
     public void WaitForDiceResult()
     {
         int _result = 0;
         bool _allDicesHaveAResult = true;
-        bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
-        for (int i = 0; i < 1 + Convert.ToInt16(playerHasStation); i++)
+        for (int i = 0; i < DiceThrown; i++)
         {
             int _diceResult = dices[i].result;
             if (_diceResult != -1)
@@ -111,10 +130,10 @@ public class Game : MonoBehaviour
         }
 
         if (_allDicesHaveAResult)
-            waitDiceFinalResult -= 10f * Time.deltaTime;
+        //    waitDiceFinalResult -= 10f * Time.deltaTime;
         
 
-        if (waitDiceFinalResult <= 0)
+        //if (waitDiceFinalResult <= 0)
         {
             currentDiceResult = _result;
             state = PaidOtherPlayers;
@@ -145,6 +164,7 @@ public class Game : MonoBehaviour
         state = PlayersReceivesMoney;
     }
 
+
     public void PlayersReceivesMoney()
     {
         for (int i = 0; i < numberOfPlayers; i++)
@@ -153,17 +173,20 @@ public class Game : MonoBehaviour
             {
                 foreach (CardName name in AllCards.CardsData.Keys)
                 {
-                    //si c'est pas une carte rouge, qu'elle a le bon numéro et que le joueur la possède
-                    if (!(AllCards.CardsData[name].color == CardColor.Red) && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
+                    if (name != CardName.None)
                     {
-                        if (AllCards.CardsData[name].color == CardColor.Purple) PurpleCardAction(name); //si c'est une carte violette
-                        else //si c'est une carte bleu ou verte
+                        //si c'est pas une carte rouge, qu'elle a le bon numéro et que le joueur la possède
+                        if (!(AllCards.CardsData[name].color == CardColor.Red) && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
                         {
-                            for (int y = 0; y < players[i].PileCards[name]; y++)
+                            if (AllCards.CardsData[name].color == CardColor.Purple) PurpleCardAction(name); //si c'est une carte violette
+                            else //si c'est une carte bleu ou verte
                             {
-                                AllCards.allCards[name].index = i;
-                                players[i].Coins += AllCards.allCards[name].Action();
+                                for (int y = 0; y < players[i].PileCards[name]; y++)
+                                {
+                                    AllCards.allCards[name].index = i;
+                                    players[i].Coins += AllCards.allCards[name].Action();
 
+                                }
                             }
                         }
                     }
@@ -192,27 +215,33 @@ public class Game : MonoBehaviour
     }
     public void WaitForPlayerToSelectCard()
     {
-        bool PAUL_MET_ICI_LA_CONDITION_POUR_DIRE_QUE_LA_CARTE_A_ETE_CHOISI = false;
-        bool PAUL_MET_ICI_LA_CONDITION_POUR_DIRE_QUE_LON_NE_CONSTRUIT_RIEN = false;
+        isPurchasing = true;
+        toNextStateUi.SetActive(true);
 
-        if (PAUL_MET_ICI_LA_CONDITION_POUR_DIRE_QUE_LA_CARTE_A_ETE_CHOISI)
+        if (ToNextState)
         {
-            currentCardToBuy = CardName.Forest;
-            state = PlayerBuild;
-        }
-        else if (PAUL_MET_ICI_LA_CONDITION_POUR_DIRE_QUE_LON_NE_CONSTRUIT_RIEN)
-        {
+            isPurchasing = false;
+            toNextStateUi.SetActive(false);
+            ToNextState = false;
             state = CheckPlayerHasWon;
         }
     }
-    public void PlayerBuild()
+    public bool PlayerBuild(CardName cardPlayerWantToBuy)
     {
         var currentPlayer = players[currentPlayerIndex];
-        CardName cardPlayerWantToBuy = currentCardToBuy;
 
         bool hasBought = currentPlayer.TryBuyCard(cardPlayerWantToBuy);
-        state = CheckPlayerHasWon;
+        return hasBought;
     }
+
+    public bool PlayerBuildMonument(MonumentName cardPlayerWantToBuy)
+    {
+        var currentPlayer = players[currentPlayerIndex];
+
+        bool hasBought = currentPlayer.TryBuyMonument(cardPlayerWantToBuy);
+        return hasBought;
+    }
+
     public void CheckPlayerHasWon()
     {
         var currentPlayer = players[currentPlayerIndex];
@@ -236,6 +265,7 @@ public class Game : MonoBehaviour
         {
             state = PlayerTrowDices;
             currentPlayerIndex++;
+            currentPlayerIndex = currentPlayerIndex % numberOfPlayers;
         }
     }
     public void EndGame()
@@ -295,6 +325,8 @@ public class Game : MonoBehaviour
     {
         List<CardName> cards = PileCards.Keys.ToList<CardName>();
 
+        x = cardPerRow - 1;
+
         for (int i = 0; i < cards.Count; i++)
         {
             if (PileCards[cards[i]] != 0)
@@ -306,12 +338,17 @@ public class Game : MonoBehaviour
                     card.transform.position += cardContent.right * (x % cardPerRow) * xOffSet * cardSizeMultiplier + cardContent.forward * ((int)(z / cardPerRow)) * yOffSet * cardSizeMultiplier;
                     
 
-                    card.GetComponent<CardDisplayData>().CardName = cards[i];
+                    card.GetComponent<CardDisplayData>().cardName = cards[i];
 
                     ChangeMaterial(AllCards.CardsData[cards[i]].material, card);
+                    card.GetComponent<CardDisplayData>().size = cardSizeMultiplier;
 
                     cardObjects[cards[i]] = card;
-                    x++;
+                    x--;
+                    if (x < 0)
+                    {
+                        x = cardPerRow - 1;
+                    }
                     z++;
                 }
                 else
@@ -325,7 +362,11 @@ public class Game : MonoBehaviour
             {
                 Destroy(cardObjects[cards[i]]);
                 cardObjects.Remove(cards[i]);
-                x--;
+                x++;
+                if (x > cardPerRow - 1)
+                {
+                    x = 0;
+                }
                 z--;
             }
         }
@@ -335,6 +376,21 @@ public class Game : MonoBehaviour
         Material[] materialsArray = go.GetComponent<MeshRenderer>().materials;
         materialsArray[2] = material;
         go.GetComponent<MeshRenderer>().materials = materialsArray;
+    }
+
+    public bool PlayerHasCard(GameObject go)
+    {
+        foreach (CardName name in cardObjects.Keys.ToList<CardName>())
+        {
+            if (cardObjects[name] == go)
+                return true;
+        }
+        return false;
+    }
+
+    public int NbCard(CardName cardName)
+    {
+        return PileCards[cardName];
     }
 
 }

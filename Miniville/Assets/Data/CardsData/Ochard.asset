@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a35b3461e3d2a64f8de8dfa80aff199, type: 3}
   m_Name: Ochard
   m_EditorClassIdentifier: 
-  cardName: 13
+  cardName: 14
   type: 0
   color: 0
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: 3900fcbf5561f0b47bdf566b608bff29, type: 2}
   Dice: 0a000000
   Cost: 3

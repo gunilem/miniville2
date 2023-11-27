@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monumentName: 1
   type: 5
-  material: {fileID: 0}
+  headMaterial: {fileID: 2100000, guid: 78e7cc656367ddc49b5ed81bc4b1ca35, type: 2}
+  tailMaterial: {fileID: 2100000, guid: 9da83206b7a05004d82fe2b21a0d3cf3, type: 2}
   Cost: 10

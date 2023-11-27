@@ -2,25 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using TMPro;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : MonoBehaviour 
 {
-    private int coins;
+    [SerializeField] private int coins;
+
+    [SerializeField] int coinsAtStart = 3;
+    [SerializeField] TextMeshProUGUI m_TextMeshPro;
+
+    int x = 0;
+    int z = 0;
 
 
     [Header("cardDisplay")]
     [SerializeField] GameObject cardPrefab;
 
-    [SerializeField] Transform cardContent;
+    public Transform cardContent;
     public float xOffSet = 1.5f;
     public float yOffSet = 2f;
 
     public float cardSizeMultiplier = 1f;
+    public float monumentSizeMultiplier = 1f;
 
-    int x = 0;
-    int z = 0;
+    public float xMonumentPreOffSet = 1.5f;
 
     public int cardPerRow = 5;
+
+    [Header("coinDisplay")]
+    public GameObject coinInstantiatePos;
+
+    public GameObject diceThrowingPos;
 
 
     public int Coins {
@@ -28,16 +41,19 @@ public class Player : MonoBehaviour
         set {
             if(value < 0) coins = 0;
             else coins = value;
+
+            m_TextMeshPro.text = coins.ToString();
+            UpdateDisplayedCoins();
         }
     }
     public Dictionary<CardName, int> PileCards = new Dictionary<CardName, int>();
     public Dictionary<MonumentName, bool> PileMonuments = new Dictionary<MonumentName, bool>();
 
-    Dictionary<CardName, GameObject> cardObjects = new Dictionary<CardName, GameObject>();
+    public Dictionary<CardName, GameObject> cardObjects = new Dictionary<CardName, GameObject>();
+    Dictionary<MonumentName, GameObject> MonumentsObjects = new Dictionary<MonumentName, GameObject>();
 
     public void Start()
     {
-        Coins = 3;
         //Rempli le dico et met à 1 WheatFields et Bkery
         foreach(CardName name in AllCards.allCards.Keys)
         {
@@ -51,7 +67,9 @@ public class Player : MonoBehaviour
             PileMonuments.Add(name, false);
         }
 
-        ReloadCard();
+        LoadCard();
+
+        Coins = coinsAtStart;
     }
 
     public bool TryBuyCard(CardName who)
@@ -99,9 +117,13 @@ public class Player : MonoBehaviour
         PileCards[who]++;
     }
 
-    void ReloadCard()
+    public void LoadCard()
     {
         List<CardName> cards = PileCards.Keys.ToList<CardName>();
+        List<MonumentName> monuments = PileMonuments.Keys.ToList<MonumentName>();
+
+        x = 0;
+        z = 0;
 
         for (int i = 0; i < cards.Count; i++)
         {
@@ -109,22 +131,27 @@ public class Player : MonoBehaviour
             {
                 if (!cardObjects.ContainsKey(cards[i]))
                 {
+
                     GameObject card = Instantiate(cardPrefab, cardContent);
                     card.transform.localScale *= cardSizeMultiplier;
-                    card.transform.position += cardContent.right * (x % cardPerRow) * xOffSet * cardSizeMultiplier + cardContent.forward * ((int)(z / cardPerRow)) * yOffSet * cardSizeMultiplier;
+                    card.transform.localPosition = NextPlaceOnDeck();
                     card.transform.rotation = Quaternion.identity;
 
-                    card.GetComponent<CardDisplayData>().CardName = cards[i];
+                    card.GetComponent<CardDisplayData>().cardName = cards[i];
+                    card.GetComponent<CardDisplayData>().size = cardSizeMultiplier;
+                    card.GetComponent<CardDisplayData>().player = this;
 
-                    ChangeMaterial(AllCards.CardsData[cards[i]].material, card);
+                    ChangeMaterial(AllCards.CardsData[cards[i]].material, card, 2);
 
                     cardObjects[cards[i]] = card;
+
                     x++;
-                    z++;
+                    if (x % cardPerRow == 0)
+                        z++;
                 }
                 else
                 {
-                    cardObjects[cards[i]].transform.position += cardContent.right * (x % cardPerRow) * xOffSet * cardSizeMultiplier + cardContent.forward * ((int)(z / cardPerRow)) * yOffSet * cardSizeMultiplier;
+                    cardObjects[cards[i]].transform.localPosition = NextPlaceOnDeck();
                 }
 
 
@@ -137,12 +164,320 @@ public class Player : MonoBehaviour
                 z--;
             }
         }
+
+        int x1 = 0;
+        for (int i = 0; i < monuments.Count; i++)
+        {
+            if (!MonumentsObjects.ContainsKey(monuments[i]))
+            {
+                GameObject monument = Instantiate(cardPrefab, cardContent);
+                monument.transform.localScale *= cardSizeMultiplier;
+                monument.transform.localPosition = Vector3.right * ((x1 % 4) + xMonumentPreOffSet) * xOffSet * monumentSizeMultiplier + Vector3.forward * (z + 1) * yOffSet * monumentSizeMultiplier;
+                monument.transform.rotation = Quaternion.identity;
+                monument.transform.Rotate(Vector3.forward, 180);
+
+                monument.GetComponent<CardDisplayData>().monumentName = monuments[i];
+                monument.GetComponent<CardDisplayData>().size = monumentSizeMultiplier;
+                monument.GetComponent<CardDisplayData>().player = this;
+
+                ChangeMaterial(AllCards.MonumentsData[monuments[i]].tailMaterial, monument, 1);
+                ChangeMaterial(AllCards.MonumentsData[monuments[i]].headMaterial, monument, 2);
+
+                MonumentsObjects[monuments[i]] = monument;
+                x1++;
+            }
+            else
+            {
+                MonumentsObjects[monuments[i]].transform.localPosition = Vector3.right * ((x1 % 4) + xMonumentPreOffSet) * xOffSet * monumentSizeMultiplier + Vector3.forward * (z + 1) * yOffSet * monumentSizeMultiplier;
+            }
+        }
     }
-    void ChangeMaterial(Material material, GameObject go)
+
+    public void ReloadCard()
+    {
+        List<CardName> cards = PileCards.Keys.ToList<CardName>();
+        List<MonumentName> monuments = PileMonuments.Keys.ToList<MonumentName>();
+
+        x = 0;
+        z = 0;
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (PileCards[cards[i]] != 0)
+            {
+                cardObjects[cards[i]].transform.localPosition = NextPlaceOnDeck();
+                x++;
+                if (x % cardPerRow == 0)
+                    z++;
+            }
+        }
+
+        int x1 = 0;
+        for (int i = 0; i < monuments.Count; i++)
+        {
+            MonumentsObjects[monuments[i]].transform.localPosition = Vector3.right * ((x1 % 4) + xMonumentPreOffSet) * xOffSet * monumentSizeMultiplier + Vector3.forward * (z + 1) * yOffSet * monumentSizeMultiplier;
+            x1++;
+        }
+    }
+
+    void ChangeMaterial(Material material, GameObject go, int idMaterial)
     {
         Material[] materialsArray = go.GetComponent<MeshRenderer>().materials;
-        materialsArray[2] = material;
+        materialsArray[idMaterial] = material;
         go.GetComponent<MeshRenderer>().materials = materialsArray;
     }
+
+    Vector3 NextPlaceOnDeck()
+    {
+        return Vector3.right * (x % cardPerRow) * xOffSet * cardSizeMultiplier + Vector3.forward * z * yOffSet * cardSizeMultiplier;
+    }
+
+    public Vector3 AddToDict(GameObject card)
+    {
+        CardDisplayData cardData = card.GetComponent<CardDisplayData>();
+        if (!cardObjects.ContainsKey(cardData.cardName))
+        {
+            cardObjects[cardData.cardName] = card;
+            return NextPlaceOnDeck();
+        }
+        else
+        {
+            return cardObjects[cardData.cardName].transform.localPosition;
+        }
+    }
+
+    public bool PlayerHasCard(GameObject go)
+    {
+        foreach(CardName name in cardObjects.Keys.ToList<CardName>())
+        {
+            if (cardObjects[name] == go)
+                return true;
+        }
+        return false;
+    }
+
+    public int NbCard(CardName cardName)
+    {
+        return PileCards[cardName];
+    }
+
+
+    #region DisplayCoins
+
+    [Header("Display Coins")]
+    int sumDiplayedCoins = 0;
+
+    [SerializeField] GameObject Coins1;
+    [SerializeField] GameObject Coins5;
+    [SerializeField] GameObject Coins10;
+
+    List<GameObject> displayedCoins = new List<GameObject>();
+
+
+    [SerializeField] float ejectMaxSpeed = 500f;
+    [SerializeField] float ejectMinSpeed = 200f;
+
+    void UpdateDisplayedCoins()
+    {
+        if (Coins > sumDiplayedCoins)
+        {
+            InstantiateCoins(Coins - sumDiplayedCoins);
+            sumDiplayedCoins = Coins;
+        }
+
+        if (Coins < sumDiplayedCoins)
+        {
+            RemoveCoins(sumDiplayedCoins - Coins);
+            sumDiplayedCoins = Coins;
+        }
+    }
+
+    private void InstantiateCoins(int nbCoins)
+    {
+        int CoinsToInstantiate = nbCoins;
+        bool instantiated = false;
+        int nbOfCoins1 = 0;
+
+        while (CoinsToInstantiate >= 10)
+        {
+            displayedCoins.Add(Instantiate(Coins10, coinInstantiatePos.transform));
+            CoinsToInstantiate -= 10;
+        }
+
+        while (CoinsToInstantiate >= 5)
+        {
+            instantiated = false;
+            foreach (GameObject Coins in displayedCoins)
+            {
+                if (Coins.name == "Coins_5(Clone)")
+                {
+                    RemoveCoins(5);
+                    InstantiateCoins(10);
+                    CoinsToInstantiate -= 5;
+                    instantiated = true;
+                    break;
+                }
+            }
+            if (!instantiated)
+            {
+                displayedCoins.Add(Instantiate(Coins5, coinInstantiatePos.transform));
+                CoinsToInstantiate -= 5;
+            }
+        }
+
+        while (CoinsToInstantiate >= 1)
+        {
+            nbOfCoins1 = 0;
+            instantiated = false;
+            foreach (GameObject Coins in displayedCoins)
+            {
+                if (Coins.name == "Coins_1(Clone)")
+                    nbOfCoins1++;
+            }
+
+            if (nbOfCoins1 == 4)
+            {
+                RemoveCoins(1);
+                RemoveCoins(1);
+                RemoveCoins(1);
+                RemoveCoins(1);
+
+                InstantiateCoins(5);
+                CoinsToInstantiate -= 1;
+            }
+            else
+            {
+                displayedCoins.Add(Instantiate(Coins1, coinInstantiatePos.transform));
+                CoinsToInstantiate -= 1;
+            }
+        }
+    }
+
+    private void RemoveCoins(int nbCoins)
+    {
+        int nbCoinsToRemove = nbCoins;
+        List<GameObject> CoinsToRemove = new List<GameObject>();
+        int CoinsToAdd = 0;
+
+        // ENLEVE LES PIECES DE 10
+        for (int i = nbCoinsToRemove; i >= 10; i -= 10)
+        {
+            foreach (GameObject Coins in displayedCoins)
+            {
+                if (Coins.name == "Coins_10(Clone)")
+                {
+                    CoinsToRemove.Add(Coins);
+                    displayedCoins.Remove(Coins);
+                    nbCoinsToRemove -= 10;
+                    break;
+                }
+            }
+        }
+
+        // ENLEVE LES PIECES DE 5
+        for (int i = nbCoinsToRemove; i >= 5; i -= 5)
+        {
+            bool CoinsRemoved = false;
+
+            foreach (GameObject Coins in displayedCoins)
+            {
+                if (Coins.name == "Coins_5(Clone)")
+                {
+                    CoinsToRemove.Add(Coins);
+                    displayedCoins.Remove(Coins);
+                    nbCoinsToRemove -= 5;
+                    CoinsRemoved = true;
+                    break;
+                }
+            }
+
+            if (!CoinsRemoved)
+            {
+                foreach (GameObject Coins in displayedCoins)
+                {
+                    if (Coins.name == "Coins_10(Clone)")
+                    {
+                        CoinsToRemove.Add(Coins);
+                        displayedCoins.Remove(Coins);
+                        CoinsToAdd += 5;
+                        nbCoinsToRemove -= 5;
+                        CoinsRemoved = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // ENLEVE LES PIECES DE 1
+        for (int i = nbCoinsToRemove; i >= 1; i -= 1)
+        {
+            bool CoinsRemoved = false;
+
+            foreach (GameObject Coins in displayedCoins)
+            {
+                if (Coins.name == "Coins_1(Clone)")
+                {
+                    CoinsToRemove.Add(Coins);
+                    displayedCoins.Remove(Coins);
+                    nbCoinsToRemove -= 1;
+                    CoinsRemoved = true;
+                    break;
+                }
+            }
+
+            if (!CoinsRemoved)
+            {
+                foreach (GameObject Coins in displayedCoins)
+                {
+                    if (Coins.name == "Coins_5(Clone)")
+                    {
+                        CoinsToRemove.Add(Coins);
+                        displayedCoins.Remove(Coins);
+                        CoinsToAdd += 4;
+                        nbCoinsToRemove -= 1;
+                        CoinsRemoved = true;
+                        break;
+                    }
+                }
+
+                if (!CoinsRemoved)
+                {
+                    foreach (GameObject Coins in displayedCoins)
+                    {
+                        if (Coins.name == "Coins_10(Clone)")
+                        {
+                            CoinsToRemove.Add(Coins);
+                            displayedCoins.Remove(Coins);
+                            CoinsToAdd += 9;
+                            nbCoinsToRemove -= 1;
+                            CoinsRemoved = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < CoinsToRemove.Count; i++)
+        {
+            GameObject Coins = CoinsToRemove[i];
+
+            Coins.GetComponent<MeshCollider>().enabled = false;
+            Coins.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-10, 11), Random.Range(1, 11), Random.Range(-10, 11)).normalized * Random.Range(ejectMinSpeed, ejectMaxSpeed), ForceMode.Impulse);
+            Coins.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(1, 11), Random.Range(1, 11), Random.Range(1, 11)).normalized * Random.Range(ejectMinSpeed, ejectMaxSpeed));
+
+            StartCoroutine(DeleteDisplayedCoin(Coins));
+        }
+
+        if (CoinsToAdd > 0)
+            InstantiateCoins(CoinsToAdd);
+    }
+
+    IEnumerator DeleteDisplayedCoin(GameObject Coins)
+    {
+        yield return new WaitForSeconds(1.0f);
+        Destroy(Coins);
+    }
+    #endregion
 
 }

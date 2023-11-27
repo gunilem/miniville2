@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a35b3461e3d2a64f8de8dfa80aff199, type: 3}
   m_Name: Furniture Factiry
   m_EditorClassIdentifier: 
-  cardName: 10
+  cardName: 11
   type: 6
   color: 2
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: b29faa1e8b2eb7747b3e2e5318fe5ff7, type: 2}
   Dice: 08000000
   Cost: 3

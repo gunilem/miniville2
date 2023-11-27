@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class CardDisplayData : MonoBehaviour
 {
-    public CardName CardName;
-    public int nbOfCard;
-    public Material face;
+    public CardName cardName;
+    public MonumentName monumentName;
+
+    public Player player;
+
+    public float size;
 }

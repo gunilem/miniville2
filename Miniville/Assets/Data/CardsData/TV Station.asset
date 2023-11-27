@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a35b3461e3d2a64f8de8dfa80aff199, type: 3}
   m_Name: TV Station
   m_EditorClassIdentifier: 
-  cardName: 8
+  cardName: 9
   type: 5
   color: 3
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: 5e863c7c2e0ff8d48a3d44c4c50cfbcc, type: 2}
   Dice: 06000000
   Cost: 7

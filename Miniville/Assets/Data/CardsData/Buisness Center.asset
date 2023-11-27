@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a35b3461e3d2a64f8de8dfa80aff199, type: 3}
   m_Name: Buisness Center
   m_EditorClassIdentifier: 
-  cardName: 7
+  cardName: 8
   type: 5
   color: 3
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: c3f0a4c98ede9194d8908921ebc96f89, type: 2}
   Dice: 06000000
   Cost: 8
