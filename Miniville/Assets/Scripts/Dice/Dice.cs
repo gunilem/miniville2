@@ -21,6 +21,8 @@ public class Dice : MonoBehaviour
 
     public int result;
 
+    public Vector3 DicePosAtBegin;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -28,6 +30,11 @@ public class Dice : MonoBehaviour
         yprevious = transform.position.y;
         zprevious = transform.position.z;
         result = -1;
+    }
+
+    private void Start()
+    {
+        DicePosAtBegin = transform.position;
     }
 
     // Update is called once per frame
@@ -41,6 +48,13 @@ public class Dice : MonoBehaviour
         }
     }
 
+    public void ResetDice(Vector3 position)
+    {
+        transform.position = position;
+        transform.rotation = Quaternion.identity;
+        rb.velocity = Vector3.zero;
+    }
+
     public void TrowDice()
     {
         result = -1;
@@ -49,7 +63,6 @@ public class Dice : MonoBehaviour
         int _zDec = (UnityEngine.Random.Range(0, 2) * 2) - 1;
 
         Vector3 distanceToCenter = new Vector3(0, 7, 0) - transform.position;
-        UnityEngine.Debug.Log(distanceToCenter);
 
         rb.AddForce(distanceToCenter * throwForce, ForceMode.Impulse);
         rb.AddTorque(Vector3.left* torqueForce);

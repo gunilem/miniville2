@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a35b3461e3d2a64f8de8dfa80aff199, type: 3}
   m_Name: Coffee Shop
   m_EditorClassIdentifier: 
-  cardName: 3
+  cardName: 4
   type: 3
   color: 1
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: c9f851de11e35ba458a9e94a1e9534ea, type: 2}
   Dice: 03000000
   Cost: 2

@@ -5,99 +5,94 @@ using UnityEngine;
 
 public class CoinsManager : MonoBehaviour
 {
-    public GameObject coin1;
-    public GameObject coin5;
-    public GameObject coin10;
+    public GameObject Coins1;
+    public GameObject Coins5;
+    public GameObject Coins10;
 
     [SerializeField] float ejectMaxSpeed = 500f;
     [SerializeField] float ejectMinSpeed = 200f;
 
-    public List<Player_TEST> players = new List<Player_TEST>();
+    public List<Player> players = new List<Player>();
+
     private List<int> prePlayersMoney = new List<int>();
     public bool updatePlayer;
 
-    private List<GameObject> displayedCoin = new List<GameObject>();
-    private List<List<GameObject>> displayedCoinPerPlayer = new List<List<GameObject>>();
+    private List<List<GameObject>> displayedCoinsPerPlayer = new List<List<GameObject>>();
 
     void Start()
     {
         for (int i = 0; i < players.Count; i++)
         {
             prePlayersMoney.Add(0);
-            displayedCoinPerPlayer.Add(new List<GameObject>());
+            displayedCoinsPerPlayer.Add(new List<GameObject>());
         }
 
         updatePlayer = false;
         
     }
 
-    void Update()
+    public void UpdatePlayer()
     {
-        if (updatePlayer)
+        for (int i = 0; i < players.Count; i++)
         {
-            for (int i = 0; i < players.Count; i++)
+            if (players[i].Coins > prePlayersMoney[i])
             {
-                if (players[i].coin > prePlayersMoney[i])
-                {
-                    InstantiateCoins(players[i], players[i].coin - prePlayersMoney[i]);
-                    prePlayersMoney[i] = players[i].coin;
-                }
+                InstantiateCoins(players[i], players[i].Coins - prePlayersMoney[i]);
+                prePlayersMoney[i] = players[i].Coins;
+            }
 
-                if (players[i].coin < prePlayersMoney[i])
-                {
-                    RemoveCoins(players[i], prePlayersMoney[i] - players[i].coin);
-                    prePlayersMoney[i] = players[i].coin;
-                }
+            if (players[i].Coins < prePlayersMoney[i])
+            {
+                RemoveCoins(players[i], prePlayersMoney[i] - players[i].Coins);
+                prePlayersMoney[i] = players[i].Coins;
             }
         }
-
-        updatePlayer = false;
     }
 
-    private void InstantiateCoins(Player_TEST player, int nbCoins)
+    private void InstantiateCoins(Player player, int nbCoins)
     {
-        int coinToInstantiate = nbCoins;
+        int CoinsToInstantiate = nbCoins;
         bool instantiated = false;
-        int nbOfcoin1 = 0;
+        int nbOfCoins1 = 0;
 
-        while (coinToInstantiate >= 10)
+        while (CoinsToInstantiate >= 10)
         {
-            displayedCoinPerPlayer[players.IndexOf(player)].Add(Instantiate(coin10, player.gameObject.transform));
-            coinToInstantiate -= 10;
+            displayedCoinsPerPlayer[players.IndexOf(player)].Add(Instantiate(Coins10, player.coinInstantiatePos.transform));
+            CoinsToInstantiate -= 10;
         }
 
-        while (coinToInstantiate >= 5)
+        while (CoinsToInstantiate >= 5)
         {
             instantiated = false;
-            foreach (GameObject coin in displayedCoinPerPlayer[players.IndexOf(player)])
+            foreach (GameObject Coins in displayedCoinsPerPlayer[players.IndexOf(player)])
             {
-                if (coin.name == "Coins_5(Clone)")
+                if (Coins.name == "Coins_5(Clone)")
                 {
                     RemoveCoins(player, 5);
                     InstantiateCoins(player, 10);
-                    coinToInstantiate -= 5;
+                    CoinsToInstantiate -= 5;
                     instantiated = true;
                     break;
                 }
             }
             if (!instantiated)
             {
-                displayedCoinPerPlayer[players.IndexOf(player)].Add(Instantiate(coin5, player.gameObject.transform));
-                coinToInstantiate -= 5;
+                displayedCoinsPerPlayer[players.IndexOf(player)].Add(Instantiate(Coins5, player.coinInstantiatePos.transform));
+                CoinsToInstantiate -= 5;
             }
         }
 
-        while (coinToInstantiate >= 1)
+        while (CoinsToInstantiate >= 1)
         {
-            nbOfcoin1 = 0;
+            nbOfCoins1 = 0;
             instantiated = false;
-            foreach (GameObject coin in displayedCoinPerPlayer[players.IndexOf(player)])
+            foreach (GameObject Coins in displayedCoinsPerPlayer[players.IndexOf(player)])
             {
-                if (coin.name == "Coins_1(Clone)")
-                    nbOfcoin1++;
+                if (Coins.name == "Coins_1(Clone)")
+                    nbOfCoins1++;
             }
 
-            if (nbOfcoin1 == 4)
+            if (nbOfCoins1 == 4)
             {
                 RemoveCoins(player, 1);
                 RemoveCoins(player, 1);
@@ -105,65 +100,65 @@ public class CoinsManager : MonoBehaviour
                 RemoveCoins(player, 1);
 
                 InstantiateCoins(player, 5);
-                coinToInstantiate -= 1;
+                CoinsToInstantiate -= 1;
             }
             else
             {
-                displayedCoinPerPlayer[players.IndexOf(player)].Add(Instantiate(coin1, player.gameObject.transform));
-                coinToInstantiate -= 1;
+                displayedCoinsPerPlayer[players.IndexOf(player)].Add(Instantiate(Coins1, player.coinInstantiatePos.transform));
+                CoinsToInstantiate -= 1;
             }
         }
     }
 
-    private void RemoveCoins(Player_TEST player, int nbCoins)
+    private void RemoveCoins(Player player, int nbCoins)
     {
-        int nbCoinToRemove = nbCoins;
-        List<GameObject> coinsToRemove = new List<GameObject>();
-        int coinsToAdd = 0;
+        int nbCoinsToRemove = nbCoins;
+        List<GameObject> CoinsToRemove = new List<GameObject>();
+        int CoinsToAdd = 0;
 
         // ENLEVE LES PIECES DE 10
-        for (int i = nbCoinToRemove; i >= 10; i -= 10)
+        for (int i = nbCoinsToRemove; i >= 10; i -= 10)
         {
-            foreach (GameObject coin in displayedCoinPerPlayer[players.IndexOf(player)])
+            foreach (GameObject Coins in displayedCoinsPerPlayer[players.IndexOf(player)])
             {
-                if (coin.name == "Coins_10(Clone)")
+                if (Coins.name == "Coins_10(Clone)")
                 {
-                    coinsToRemove.Add(coin);
-                    displayedCoinPerPlayer[players.IndexOf(player)].Remove(coin);
-                    nbCoinToRemove -= 10;
+                    CoinsToRemove.Add(Coins);
+                    displayedCoinsPerPlayer[players.IndexOf(player)].Remove(Coins);
+                    nbCoinsToRemove -= 10;
                     break;
                 }
             }
         }
 
         // ENLEVE LES PIECES DE 5
-        for (int i = nbCoinToRemove; i >= 5; i -= 5)
+        for (int i = nbCoinsToRemove; i >= 5; i -= 5)
         {
-            bool coinRemoved = false;
+            bool CoinsRemoved = false;
 
-            foreach (GameObject coin in displayedCoinPerPlayer[players.IndexOf(player)])
+            foreach (GameObject Coins in displayedCoinsPerPlayer[players.IndexOf(player)])
             {
-                if (coin.name == "Coins_5(Clone)")
+                if (Coins.name == "Coins_5(Clone)")
                 {
-                    coinsToRemove.Add(coin);
-                    displayedCoinPerPlayer[players.IndexOf(player)].Remove(coin);
-                    nbCoinToRemove -= 5;
-                    coinRemoved = true;
+                    CoinsToRemove.Add(Coins);
+                    displayedCoinsPerPlayer[players.IndexOf(player)].Remove(Coins);
+                    nbCoinsToRemove -= 5;
+                    CoinsRemoved = true;
                     break;
                 }
             }
                 
-            if (!coinRemoved)
+            if (!CoinsRemoved)
             {
-                foreach (GameObject coin in displayedCoinPerPlayer[players.IndexOf(player)])
+                foreach (GameObject Coins in displayedCoinsPerPlayer[players.IndexOf(player)])
                 {
-                    if (coin.name == "Coins_10(Clone)")
+                    if (Coins.name == "Coins_10(Clone)")
                     {
-                        coinsToRemove.Add(coin);
-                        displayedCoinPerPlayer[players.IndexOf(player)].Remove(coin);
-                        coinsToAdd += 5;
-                        nbCoinToRemove -= 5;
-                        coinRemoved = true;
+                        CoinsToRemove.Add(Coins);
+                        displayedCoinsPerPlayer[players.IndexOf(player)].Remove(Coins);
+                        CoinsToAdd += 5;
+                        nbCoinsToRemove -= 5;
+                        CoinsRemoved = true;
                         break;
                     }
                 }
@@ -171,48 +166,48 @@ public class CoinsManager : MonoBehaviour
         }
 
         // ENLEVE LES PIECES DE 1
-        for (int i = nbCoinToRemove; i >= 1; i -= 1)
+        for (int i = nbCoinsToRemove; i >= 1; i -= 1)
         {
-            bool coinRemoved = false;
+            bool CoinsRemoved = false;
 
-            foreach (GameObject coin in displayedCoinPerPlayer[players.IndexOf(player)])
+            foreach (GameObject Coins in displayedCoinsPerPlayer[players.IndexOf(player)])
             {
-                if (coin.name == "Coins_1(Clone)")
+                if (Coins.name == "Coins_1(Clone)")
                 {
-                    coinsToRemove.Add(coin);
-                    displayedCoinPerPlayer[players.IndexOf(player)].Remove(coin);
-                    nbCoinToRemove -= 1;
-                    coinRemoved = true;
+                    CoinsToRemove.Add(Coins);
+                    displayedCoinsPerPlayer[players.IndexOf(player)].Remove(Coins);
+                    nbCoinsToRemove -= 1;
+                    CoinsRemoved = true;
                     break;
                 }
             }
 
-            if (!coinRemoved)
+            if (!CoinsRemoved)
             {
-                foreach (GameObject coin in displayedCoinPerPlayer[players.IndexOf(player)])
+                foreach (GameObject Coins in displayedCoinsPerPlayer[players.IndexOf(player)])
                 {
-                    if (coin.name == "Coins_5(Clone)")
+                    if (Coins.name == "Coins_5(Clone)")
                     {
-                        coinsToRemove.Add(coin);
-                        displayedCoinPerPlayer[players.IndexOf(player)].Remove(coin);
-                        coinsToAdd += 4;
-                        nbCoinToRemove -= 1;
-                        coinRemoved = true;
+                        CoinsToRemove.Add(Coins);
+                        displayedCoinsPerPlayer[players.IndexOf(player)].Remove(Coins);
+                        CoinsToAdd += 4;
+                        nbCoinsToRemove -= 1;
+                        CoinsRemoved = true;
                         break;
                     }
                 }
 
-                if (!coinRemoved)
+                if (!CoinsRemoved)
                 {
-                    foreach (GameObject coin in displayedCoinPerPlayer[players.IndexOf(player)])
+                    foreach (GameObject Coins in displayedCoinsPerPlayer[players.IndexOf(player)])
                     {
-                        if (coin.name == "Coins_10(Clone)")
+                        if (Coins.name == "Coins_10(Clone)")
                         {
-                            coinsToRemove.Add(coin);
-                            displayedCoinPerPlayer[players.IndexOf(player)].Remove(coin);
-                            coinsToAdd += 9;
-                            nbCoinToRemove -= 1;
-                            coinRemoved = true;
+                            CoinsToRemove.Add(Coins);
+                            displayedCoinsPerPlayer[players.IndexOf(player)].Remove(Coins);
+                            CoinsToAdd += 9;
+                            nbCoinsToRemove -= 1;
+                            CoinsRemoved = true;
                             break;
                         }
                     }
@@ -220,24 +215,24 @@ public class CoinsManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < coinsToRemove.Count; i++)
+        for (int i = 0; i < CoinsToRemove.Count; i++)
         {
-            GameObject coin = coinsToRemove[i];
+            GameObject Coins = CoinsToRemove[i];
 
-            coin.GetComponent<MeshCollider>().enabled = false;
-            coin.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-10, 11), Random.Range(1, 11), Random.Range(-10, 11)).normalized * Random.Range(ejectMinSpeed, ejectMaxSpeed), ForceMode.Impulse);
-            coin.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(1, 11), Random.Range(1, 11), Random.Range(1, 11)).normalized * Random.Range(ejectMinSpeed, ejectMaxSpeed));
+            Coins.GetComponent<MeshCollider>().enabled = false;
+            Coins.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-10, 11), Random.Range(1, 11), Random.Range(-10, 11)).normalized * Random.Range(ejectMinSpeed, ejectMaxSpeed), ForceMode.Impulse);
+            Coins.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(1, 11), Random.Range(1, 11), Random.Range(1, 11)).normalized * Random.Range(ejectMinSpeed, ejectMaxSpeed));
 
-            StartCoroutine(MyCoroutine(coin));
+            StartCoroutine(MyCoroutine(Coins));
         }
 
-        if (coinsToAdd > 0)
-            InstantiateCoins(player, coinsToAdd);
+        if (CoinsToAdd > 0)
+            InstantiateCoins(player, CoinsToAdd);
     }
 
-    IEnumerator MyCoroutine(GameObject coin)
+    IEnumerator MyCoroutine(GameObject Coins)
     {
         yield return new WaitForSeconds(1.0f);
-        Destroy(coin);
+        Destroy(Coins);
     }
 }
