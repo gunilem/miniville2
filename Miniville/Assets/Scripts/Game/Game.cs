@@ -154,8 +154,8 @@ public class Game : MonoBehaviour
             {
                 foreach (CardName name in AllCards.CardsData.Keys)
                 {
-                    //si c'est une carte verte, qu'elle a le bon numéro et que le joueur la possède
-                    if ( AllCards.CardsData[name].color == CardColor.Green && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
+                    //si c'est une carte bleu, qu'elle a le bon numéro et que le joueur la possède
+                    if ( AllCards.CardsData[name].color == CardColor.Blue && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
                     {
                         for (int y = 0; y < players[i].PileCards[name]; y++)
                         {
