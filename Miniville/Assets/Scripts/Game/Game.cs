@@ -20,8 +20,8 @@ public class Game : MonoBehaviour
     [Header("Data")]
     [SerializeField] Dice[] dices = new Dice[2];
     public List<Player> players = new List<Player>();
-    [HideInInspector]public int currentPlayerIndex;
-    int currentDiceResult = 11;
+    public int currentPlayerIndex;
+    [SerializeField]int currentDiceResult = 11;
     int playerWhosWin;
     public Dictionary<CardName, int> PileCards = new Dictionary<CardName, int>();
     Dictionary<CardName, GameObject> cardObjects = new Dictionary<CardName, GameObject>();
@@ -130,12 +130,13 @@ public class Game : MonoBehaviour
         }
 
         if (_allDicesHaveAResult)
-        //    waitDiceFinalResult -= 10f * Time.deltaTime;
-        
-
-        //if (waitDiceFinalResult <= 0)
         {
             currentDiceResult = _result;
+            
+            if (players[currentPlayerIndex].PileMonuments[MonumentName.AmusementPark] && DiceThrown > 1 && dices[0].result == dices[1].result) //si ta le parc d'attraction et que ta fait un double tu met replay true pour rejouer au prochain tour
+                players[currentPlayerIndex].replay = true;
+            if (players[currentPlayerIndex].PileMonuments[MonumentName.RadioTower] && players[currentPlayerIndex].firstThrow) //si le joueur à la tour radio et que c'est son premier lancer, demander s'il veux relancer
+                Debug.Log("Demander au joueur s'il veut rejour"); 
             state = PaidOtherPlayers;
         }
     }
@@ -197,8 +198,8 @@ public class Game : MonoBehaviour
             {
                 foreach (CardName name in AllCards.CardsData.Keys)
                 {
-                    //si c'est une carte verte, qu'elle a le bon numéro et que le joueur la possède
-                    if ( AllCards.CardsData[name].color == CardColor.Green && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
+                    //si c'est une carte bleu, qu'elle a le bon numéro et que le joueur la possède
+                    if ( AllCards.CardsData[name].color == CardColor.Blue && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
                     {
                         for (int y = 0; y < players[i].PileCards[name]; y++)
                         {
@@ -230,7 +231,9 @@ public class Game : MonoBehaviour
     {
         var currentPlayer = players[currentPlayerIndex];
 
-        bool hasBought = currentPlayer.TryBuyCard(cardPlayerWantToBuy);
+        bool hasBought = PileCards[cardPlayerWantToBuy] > 0 && currentPlayer.TryBuyCard(cardPlayerWantToBuy);
+        if (hasBought)
+            state = CheckPlayerHasWon;
         return hasBought;
     }
 
@@ -239,6 +242,8 @@ public class Game : MonoBehaviour
         var currentPlayer = players[currentPlayerIndex];
 
         bool hasBought = currentPlayer.TryBuyMonument(cardPlayerWantToBuy);
+        if (hasBought)
+            state = CheckPlayerHasWon;
         return hasBought;
     }
 
@@ -263,9 +268,14 @@ public class Game : MonoBehaviour
         }
         else
         {
+            if (!players[currentPlayerIndex].replay) //replay est true si le joueur avait fait un double et possedait le parc d'attraction
+            {
+                currentPlayerIndex++;
+                currentPlayerIndex = currentPlayerIndex % numberOfPlayers;
+            }
+            players[currentPlayerIndex].replay = false;
+            players[currentPlayerIndex].firstThrow = true;
             state = PlayerTrowDices;
-            currentPlayerIndex++;
-            currentPlayerIndex = currentPlayerIndex % numberOfPlayers;
         }
     }
     public void EndGame()

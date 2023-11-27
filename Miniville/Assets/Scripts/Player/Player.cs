@@ -52,6 +52,9 @@ public class Player : MonoBehaviour
     public Dictionary<CardName, GameObject> cardObjects = new Dictionary<CardName, GameObject>();
     Dictionary<MonumentName, GameObject> MonumentsObjects = new Dictionary<MonumentName, GameObject>();
 
+    public bool firstThrow = true;
+    public bool replay = false;
+
     public void Start()
     {
         //Rempli le dico et met à 1 WheatFields et Bkery
@@ -66,7 +69,7 @@ public class Player : MonoBehaviour
         {
             PileMonuments.Add(name, false);
         }
-
+        
         LoadCard();
 
         Coins = coinsAtStart;
@@ -74,6 +77,8 @@ public class Player : MonoBehaviour
 
     public bool TryBuyCard(CardName who)
     {
+        if (AllCards.CardsData[who].color == CardColor.Purple && PileCards[who] > 0) //si c'est une carte violette et que tu la déjà return fale (on peut avoir chaque exemplaire de carte violette en 1fois max)
+            return false;
         if(coins >= AllCards.allCards[who].cardData.Cost)
         {
             GiveCard(who);
