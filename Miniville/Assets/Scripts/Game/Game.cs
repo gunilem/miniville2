@@ -16,6 +16,9 @@ public class Game : MonoBehaviour
     [SerializeField] GameObject rerollUi;
 
     bool playerMadeChoice = false;
+    CardName cardToSteal;
+    CardName cardToGive;
+    Player playerToSteal;
 
     bool rerollDice = false;
 
@@ -50,6 +53,10 @@ public class Game : MonoBehaviour
     public bool ToNextState = false;
 
     public bool isPurchasing = false;
+
+    [Header("Dice Debug")]
+    [SerializeField] bool useTrickDiceResult;
+    [SerializeField] int trickDiceResult;
 
     delegate void del(); del state;
     private void Awake()
@@ -136,7 +143,10 @@ public class Game : MonoBehaviour
 
         if (_allDicesHaveAResult)
         {
-            currentDiceResult = _result;
+            if (useTrickDiceResult)
+                currentDiceResult = trickDiceResult;
+            else
+                currentDiceResult = _result;
             
             if (players[currentPlayerIndex].PileMonuments[MonumentName.AmusementPark] && DiceThrown > 1 && dices[0].result == dices[1].result) //si ta le parc d'attraction et que ta fait un double tu met replay true pour rejouer au prochain tour
                 players[currentPlayerIndex].replay = true;
@@ -203,10 +213,17 @@ public class Game : MonoBehaviour
 
     public void PlayersReceivesMoney()
     {
+        if(currentDiceResult == 6) //si le dice = 6 ça active seulement les cartes violettes donc on passe dans le state PurpleCard
+        {
+            state = PurpleCardAction;  
+            return;
+        }
+
         for (int i = 0; i < numberOfPlayers; i++)
         {
             if (i == currentPlayerIndex) //si c'est le joueur dont c'est le tour
             {
+                
                 foreach (CardName name in AllCards.CardsData.Keys)
                 {
                     if (name != CardName.None)
@@ -214,15 +231,13 @@ public class Game : MonoBehaviour
                         //si c'est pas une carte rouge, qu'elle a le bon numéro et que le joueur la possède
                         if (!(AllCards.CardsData[name].color == CardColor.Red) && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
                         {
-                            if (AllCards.CardsData[name].color == CardColor.Purple) PurpleCardAction(name); //si c'est une carte violette
-                            else //si c'est une carte bleu ou verte
-                            {
-                                for (int y = 0; y < players[i].PileCards[name]; y++)
-                                {
-                                    AllCards.allCards[name].index = i;
-                                    players[i].Coins += AllCards.allCards[name].Action();
+                            //if (AllCards.CardsData[name].color == CardColor.Purple) PurpleCardAction(name); //si c'est une carte violette
 
-                                }
+                            for (int y = 0; y < players[i].PileCards[name]; y++)
+                            {
+                                AllCards.allCards[name].index = i;
+                                players[i].Coins += AllCards.allCards[name].Action();
+
                             }
                         }
                     }
@@ -314,17 +329,24 @@ public class Game : MonoBehaviour
         Debug.Log("Fin du jeu");
     }
 
-    private void PurpleCardAction(CardName name)
+    private void PurpleCardAction()
     {
-        if (name == CardName.Stadium)
+        Player currentPlayer = players[currentPlayerIndex];
+        if (currentPlayer.PileCards[CardName.Stadium] > 0)
             StadiumAction();
-        else if (name == CardName.BusinessCenter)
-            BuisnessCenterAction();
-        else if (name == CardName.TVStation)
-            TVStationAction();
+        if (currentPlayer.PileCards[CardName.BusinessCenter] > 0)
+        {
+            state = WaitToChooseTheCardToSteal; return;
+        }
+            
+        else if (currentPlayer.PileCards[CardName.TVStation] > 0)
+        {
+            state = TVStationAction; return;
+        }
         else
         {
-            Debug.LogError("isnt a purple card");
+            players[currentPlayerIndex].nextRoundButton.interactable = true;
+            state = WaitForPlayerToSelectCard;
         }
 
     }
@@ -340,26 +362,68 @@ public class Game : MonoBehaviour
         }
     }
 
+    void WaitToChooseTheCardToSteal() //étape 1 Buisness center action
+    {
+        if (playerMadeChoice)
+        {
+            //ICI redéfinir cardToSteal et lier playerToSteal au joueur qui avait la carte
+            playerMadeChoice = false;
+            state = WaitToChooseTheCardToGive;
+        }
+    }
+    void WaitToChooseTheCardToGive() //étape 2 Buisness center action
+    {
+        if (playerMadeChoice)
+        {
+            //ICI redéfinir cardToGive
+            playerMadeChoice = false;
+            state = BuisnessCenterAction;
+        }
+    }
     private void BuisnessCenterAction()
     {
-        //Ici choisir le joueur à qui échanger une carte
-        int indexPlayerToStealCard = numberOfPlayers - 1;
-        //ici choisi la carte à voler parmis les cartes qu'il à (à savoir celle qui ont 1 ou plus comme value dans leur dictionnaire PileCards )
-        CardName cardToSteal = CardName.Forest;
-        //ici on choisi la carte à donner dans son jeu (à savoir les cartes qui ont plus de 1 dans notre PileCard)
-        CardName cardToGive = CardName.Restaurant;
+        int indexPlayerToStealCard = 0;
+        for(int i = 0; i < numberOfPlayers; i++)
+        {
+            if (players[i] == playerToSteal)
+                indexPlayerToStealCard = i;
+        }
+        players[indexPlayerToStealCard].GiveCard(cardToGive);
+        players[indexPlayerToStealCard].PileCards[cardToSteal]--;
 
         players[currentPlayerIndex].GiveCard(cardToSteal);
         players[currentPlayerIndex].PileCards[cardToGive]--;
 
-        players[indexPlayerToStealCard].GiveCard(cardToGive);
-        players[indexPlayerToStealCard].PileCards[cardToSteal]--;
+        if (players[currentPlayerIndex].PileCards[CardName.TVStation] > 0)//si le joueur à la crate TVStation, tu demandes à qui il veux volr de la thunasse
+            state = WaitToChoosePlayerToStealMoney;
+        else //sinon tu skipe directement à l'achat de nouvelle carte
+        {
+            players[currentPlayerIndex].nextRoundButton.interactable = true;
+            state = WaitForPlayerToSelectCard;
+        }
 
     }
 
+    void WaitToChoosePlayerToStealMoney() //étape 1 TV station action
+    {
+        if (playerMadeChoice)
+        {
+            //Ici definir dans playerToSteal le joueur à qui voler 5 argent car on adore largen JE DETESTE LES STATES MACHINE DE TA MER
+            playerMadeChoice = false;
+            state = TVStationAction;
+        }
+    }
+
     private void TVStationAction() {
-        int indexPlayerToStealCoins = numberOfPlayers - 1; //Ici choisir le joueur à qui voler de l'argent (faire attention à ce que ce ne soit pas le joueur qui joue actuellement)
+        int indexPlayerToStealCoins = 0;
+        for (int i = 0; i < numberOfPlayers; i++)
+        {
+            if (players[i] == playerToSteal)
+                indexPlayerToStealCoins = i;
+        }
         players[indexPlayerToStealCoins].PaidOtherPlayer(players[currentPlayerIndex],5);
+        players[currentPlayerIndex].nextRoundButton.interactable = true;
+        state = WaitForPlayerToSelectCard;
     }
 
     void ReloadCard()
