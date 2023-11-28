@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
     [SerializeField] private int coins;
 
     [SerializeField] int coinsAtStart = 3;
-    [SerializeField] TextMeshProUGUI m_TextMeshPro;
+    [SerializeField] TextMeshProUGUI coinDisplayer;
+    [SerializeField] TextMeshProUGUI nbMonumentDisplayer;
 
     int x = 0;
     int z = 0;
@@ -42,7 +43,7 @@ public class Player : MonoBehaviour
             if(value < 0) coins = 0;
             else coins = value;
 
-            m_TextMeshPro.text = coins.ToString();
+            coinDisplayer.text = coins.ToString();
             UpdateDisplayedCoins();
         }
     }
@@ -92,6 +93,7 @@ public class Player : MonoBehaviour
     {
         if (coins >= AllCards.MonumentsData[who].Cost)
         {
+            nbMonumentDisplayer.text = (int.Parse(nbMonumentDisplayer.text) + 1).ToString();
             PileMonuments[who] = true;
             Coins -= AllCards.MonumentsData[who].Cost;
             return true;

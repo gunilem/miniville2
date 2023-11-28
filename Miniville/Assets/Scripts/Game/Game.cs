@@ -13,6 +13,11 @@ public class Game : MonoBehaviour
     [SerializeField] GameObject oneDiceUi;
     [SerializeField] GameObject twoDiceUi;
     [SerializeField] GameObject toNextStateUi;
+    [SerializeField] GameObject rerollUi;
+
+    bool playerMadeChoice = false;
+
+    bool rerollDice = false;
 
     int DiceThrown;
 
@@ -136,10 +141,40 @@ public class Game : MonoBehaviour
             if (players[currentPlayerIndex].PileMonuments[MonumentName.AmusementPark] && DiceThrown > 1 && dices[0].result == dices[1].result) //si ta le parc d'attraction et que ta fait un double tu met replay true pour rejouer au prochain tour
                 players[currentPlayerIndex].replay = true;
             if (players[currentPlayerIndex].PileMonuments[MonumentName.RadioTower] && players[currentPlayerIndex].firstThrow) //si le joueur à la tour radio et que c'est son premier lancer, demander s'il veux relancer
-                Debug.Log("Demander au joueur s'il veut rejour"); 
-            state = PaidOtherPlayers;
+            {
+                players[currentPlayerIndex].firstThrow = false;
+                rerollUi.SetActive(true);
+                state = WaitForRerollDice;
+            }
+            else state = PaidOtherPlayers;
         }
     }
+
+    public void WaitForRerollDice()
+    {
+        if (playerMadeChoice)
+        {
+            if (rerollDice)
+            {
+                state = PlayerTrowDices;
+                rerollDice = false;
+            }
+            else
+            {
+                state = PaidOtherPlayers;
+            }
+            rerollUi.SetActive(false);
+
+            playerMadeChoice = false;
+        }
+    }
+
+    public void SetRerollDices(bool choice)
+    {
+        playerMadeChoice = true;
+        rerollDice = choice;
+    }
+
     public void PaidOtherPlayers()
     {
         for(int i = 0; i < numberOfPlayers; i++)
