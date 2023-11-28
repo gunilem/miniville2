@@ -12,7 +12,7 @@ public class Game : MonoBehaviour
 
     [SerializeField] GameObject oneDiceUi;
     [SerializeField] GameObject twoDiceUi;
-    [SerializeField] GameObject toNextStateUi;
+    public GameObject toNextStateUi;
     [SerializeField] GameObject rerollUi;
 
     bool playerMadeChoice = false;
@@ -92,8 +92,8 @@ public class Game : MonoBehaviour
     public void PlayerTrowDices()
     {
         bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
-        if (playerHasStation) twoDiceUi.SetActive(true);
-        else oneDiceUi.SetActive(true);
+        if (playerHasStation) players[currentPlayerIndex].roll2DiceButton.interactable = true;
+        players[currentPlayerIndex].roll1DiceButton.interactable = true;
     }
 
     public void ThrowDice(int nbOFDice)
@@ -111,8 +111,8 @@ public class Game : MonoBehaviour
             dices[1].ResetDice(players[currentPlayerIndex].diceThrowingPos.transform.position);
             dices[1].TrowDice();
         }
-        twoDiceUi.SetActive(false);
-        oneDiceUi.SetActive(false);
+        players[currentPlayerIndex].roll1DiceButton.interactable = false;
+        players[currentPlayerIndex].roll2DiceButton.interactable = false;
         DiceThrown = nbOFDice;
         state = WaitForDiceResult;
     }
@@ -246,18 +246,18 @@ public class Game : MonoBehaviour
                 }
             }
         }
+        players[currentPlayerIndex].nextRoundButton.interactable = true;
         state = WaitForPlayerToSelectCard;
 
     }
     public void WaitForPlayerToSelectCard()
     {
         isPurchasing = true;
-        toNextStateUi.SetActive(true);
 
         if (ToNextState)
         {
             isPurchasing = false;
-            toNextStateUi.SetActive(false);
+            players[currentPlayerIndex].nextRoundButton.interactable = false;
             ToNextState = false;
             state = CheckPlayerHasWon;
         }
@@ -267,8 +267,6 @@ public class Game : MonoBehaviour
         var currentPlayer = players[currentPlayerIndex];
 
         bool hasBought = PileCards[cardPlayerWantToBuy] > 0 && currentPlayer.TryBuyCard(cardPlayerWantToBuy);
-        if (hasBought)
-            state = CheckPlayerHasWon;
         return hasBought;
     }
 
@@ -277,8 +275,6 @@ public class Game : MonoBehaviour
         var currentPlayer = players[currentPlayerIndex];
 
         bool hasBought = currentPlayer.TryBuyMonument(cardPlayerWantToBuy);
-        if (hasBought)
-            state = CheckPlayerHasWon;
         return hasBought;
     }
 

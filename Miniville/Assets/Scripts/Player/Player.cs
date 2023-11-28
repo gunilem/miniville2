@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : MonoBehaviour 
 {
@@ -12,6 +12,13 @@ public class Player : MonoBehaviour
     [SerializeField] int coinsAtStart = 3;
     [SerializeField] TextMeshProUGUI coinDisplayer;
     [SerializeField] TextMeshProUGUI nbMonumentDisplayer;
+
+    [SerializeField] public Button roll1DiceButton;
+    [SerializeField] public Button roll2DiceButton;
+    [SerializeField] public Button purchaseCardButton;
+    [SerializeField] public Button nextRoundButton;
+
+    public bool hasStation = false;
 
     int x = 0;
     int z = 0;
@@ -93,6 +100,11 @@ public class Player : MonoBehaviour
     {
         if (coins >= AllCards.MonumentsData[who].Cost)
         {
+            if (who == MonumentName.Station)
+            {
+                hasStation = true;
+                roll2DiceButton.gameObject.SetActive(true);
+            }
             nbMonumentDisplayer.text = (int.Parse(nbMonumentDisplayer.text) + 1).ToString();
             PileMonuments[who] = true;
             Coins -= AllCards.MonumentsData[who].Cost;

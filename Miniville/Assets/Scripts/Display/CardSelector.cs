@@ -14,8 +14,6 @@ public class CardSelector : MonoBehaviour
     public Vector3 basePos;
     public Transform Selectedcard;
 
-    public GameObject canva;
-
     public float speed = 2.0f;
     public Transform positionOfCard;
 
@@ -64,13 +62,13 @@ public class CardSelector : MonoBehaviour
                     CardDisplayData data = Selectedcard.GetComponent<CardDisplayData>();
                     if (Game.instance.isPurchasing)
                     {
-                        if (data.player == null) canva.SetActive(true);
+                        if (data.player == null) Game.instance.players[Game.instance.currentPlayerIndex].purchaseCardButton.interactable = true;
                         else
                         {
                             if (data.cardName == CardName.None
                                 && !data.player.PileMonuments[data.monumentName]
                                 && data.player.transform == Game.instance.players[Game.instance.currentPlayerIndex].transform)
-                            { canva.SetActive(true); }
+                            { Game.instance.players[Game.instance.currentPlayerIndex].purchaseCardButton.interactable = true; }
                         }
                     }
                 }
@@ -99,9 +97,10 @@ public class CardSelector : MonoBehaviour
                     }
                     if (data.player != null) data.player.ReloadCard();
 
+                    Game.instance.players[Game.instance.currentPlayerIndex].nextRoundButton.interactable = true;
+
                     Selectedcard = null;
                     basePos = Vector3.zero;
-
                     if (wansToChangeRound)
                     {
                         wansToChangeRound = false;
@@ -136,6 +135,7 @@ public class CardSelector : MonoBehaviour
             else
                 Selectedcard = hit.transform;
 
+            Game.instance.players[Game.instance.currentPlayerIndex].nextRoundButton.interactable = false;
             isCardSelected = true;
             selectingCard = true;
 
@@ -168,7 +168,7 @@ public class CardSelector : MonoBehaviour
             Selectedcard.Rotate(Vector3.forward, 180);
             isRotated = false;
         }
-        canva.SetActive(false);
+        Game.instance.players[Game.instance.currentPlayerIndex].purchaseCardButton.interactable = false;
 
         //SFX
         sfx.PlaySound("cardToBack", Selectedcard);
@@ -214,6 +214,7 @@ public class CardSelector : MonoBehaviour
                 data.size = data.player.cardSizeMultiplier;
                 Selectedcard.SetParent(data.player.cardContent, true);
                 basePos = data.player.cardContent.position + Game.instance.players[Game.instance.currentPlayerIndex].AddToDict(Selectedcard.gameObject);
+                wansToChangeRound = true;
             }
         }
         else
@@ -223,6 +224,7 @@ public class CardSelector : MonoBehaviour
                 Selectedcard.Rotate(Vector3.forward, 180);
                 //SFX
                 sfx.PlaySound("cardFlip", Selectedcard);
+                wansToChangeRound = true;
             }
         }
         Deselect();
