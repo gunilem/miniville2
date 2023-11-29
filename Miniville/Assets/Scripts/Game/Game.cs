@@ -4,21 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
     public static Game instance;
 
-    [SerializeField] GameObject oneDiceUi;
-    [SerializeField] GameObject twoDiceUi;
-    public GameObject toNextStateUi;
     [SerializeField] GameObject rerollUi;
+    [SerializeField] public GameObject tradingCardUI1;
+    [SerializeField] public GameObject tradingCardUI2;
+    [SerializeField] public GameObject tradingMoneyUI;
 
-    bool playerMadeChoice = false;
-    CardName cardToSteal;
-    CardName cardToGive;
-    Player playerToSteal;
+    Color32 selectedColor = new Color32(138, 142, 163, 255);
+
+    public bool isTrading;
+    public bool isStealingMoney;
+
+    public bool playerMadeChoice = false;
+    public Player playerToSteal;
 
     bool rerollDice = false;
 
@@ -27,6 +30,7 @@ public class Game : MonoBehaviour
 
     [Header("Data")]
     [SerializeField] Dice[] dices = new Dice[2];
+
     public List<Player> players = new List<Player>();
     public int currentPlayerIndex;
     [SerializeField]int currentDiceResult = 11;
@@ -74,6 +78,13 @@ public class Game : MonoBehaviour
         
         currentPlayerIndex = 0;
 
+        for (int i = 0; i < numberOfPlayers; i++)
+        {
+            players[i].Ui.SetActive(true);
+        }
+
+        players[currentPlayerIndex].UiImage.color = new Color32(255, 255, 255, 255);
+
         ReloadCard();
 
 
@@ -98,6 +109,8 @@ public class Game : MonoBehaviour
 
     public void PlayerTrowDices()
     {
+        
+
         bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
         if (playerHasStation) players[currentPlayerIndex].roll2DiceButton.interactable = true;
         players[currentPlayerIndex].roll1DiceButton.interactable = true;
@@ -317,7 +330,9 @@ public class Game : MonoBehaviour
             if (!players[currentPlayerIndex].replay) //replay est true si le joueur avait fait un double et possedait le parc d'attraction
             {
                 currentPlayerIndex++;
+                players[(currentPlayerIndex - 1) % numberOfPlayers].UiImage.color = selectedColor;
                 currentPlayerIndex = currentPlayerIndex % numberOfPlayers;
+                players[currentPlayerIndex].UiImage.color = Color.white;
             }
             players[currentPlayerIndex].replay = false;
             players[currentPlayerIndex].firstThrow = true;
@@ -336,12 +351,26 @@ public class Game : MonoBehaviour
             StadiumAction();
         if (currentPlayer.PileCards[CardName.BusinessCenter] > 0)
         {
+            tradingCardUI1.SetActive(true);
+            isTrading = true;
             state = WaitToChooseTheCardToSteal; return;
         }
             
         else if (currentPlayer.PileCards[CardName.TVStation] > 0)
         {
-            state = TVStationAction; return;
+            isStealingMoney = true;
+            tradingMoneyUI.SetActive(true);
+
+            players[currentPlayerIndex].UIButtonStealMoney.interactable = false;
+            foreach (Player p in players)
+            {
+                if (p != players[currentPlayerIndex])
+                {
+                    p.UiImage.color = Color.white;
+                }
+            }
+
+            state = WaitToChoosePlayerToStealMoney; return;
         }
         else
         {
@@ -368,18 +397,10 @@ public class Game : MonoBehaviour
         {
             //ICI redéfinir cardToSteal et lier playerToSteal au joueur qui avait la carte
             playerMadeChoice = false;
-            state = WaitToChooseTheCardToGive;
-        }
-    }
-    void WaitToChooseTheCardToGive() //étape 2 Buisness center action
-    {
-        if (playerMadeChoice)
-        {
-            //ICI redéfinir cardToGive
-            playerMadeChoice = false;
             state = BuisnessCenterAction;
         }
     }
+
     private void BuisnessCenterAction()
     {
         int indexPlayerToStealCard = 0;
@@ -388,14 +409,27 @@ public class Game : MonoBehaviour
             if (players[i] == playerToSteal)
                 indexPlayerToStealCard = i;
         }
-        players[indexPlayerToStealCard].GiveCard(cardToGive);
-        players[indexPlayerToStealCard].PileCards[cardToSteal]--;
-
-        players[currentPlayerIndex].GiveCard(cardToSteal);
-        players[currentPlayerIndex].PileCards[cardToGive]--;
+        players[currentPlayerIndex].ReloadCard();
+        players[indexPlayerToStealCard].ReloadCard();
+        
+        isTrading = false;
 
         if (players[currentPlayerIndex].PileCards[CardName.TVStation] > 0)//si le joueur à la crate TVStation, tu demandes à qui il veux volr de la thunasse
+        {
+            isStealingMoney = true;
+            tradingMoneyUI.SetActive(true);
+
+            players[currentPlayerIndex].UIButtonStealMoney.interactable = false;
+            foreach (Player p in players)
+            {
+                if (p != players[currentPlayerIndex])
+                {
+                    p.UiImage.color = Color.white;
+                }
+            }
+
             state = WaitToChoosePlayerToStealMoney;
+        }
         else //sinon tu skipe directement à l'achat de nouvelle carte
         {
             players[currentPlayerIndex].nextRoundButton.interactable = true;
@@ -423,6 +457,18 @@ public class Game : MonoBehaviour
         }
         players[indexPlayerToStealCoins].PaidOtherPlayer(players[currentPlayerIndex],5);
         players[currentPlayerIndex].nextRoundButton.interactable = true;
+        isStealingMoney = false;
+        tradingMoneyUI.SetActive(false);
+
+        players[currentPlayerIndex].UIButtonStealMoney.interactable = true;
+        foreach (Player p in players)
+        {
+            if (p != players[currentPlayerIndex])
+            {
+                p.UiImage.color = selectedColor;
+            }
+        }
+
         state = WaitForPlayerToSelectCard;
     }
 
@@ -442,11 +488,15 @@ public class Game : MonoBehaviour
                     card.transform.localScale *= cardSizeMultiplier;
                     card.transform.position += cardContent.right * (x % cardPerRow) * xOffSet * cardSizeMultiplier + cardContent.forward * ((int)(z / cardPerRow)) * yOffSet * cardSizeMultiplier;
                     
+                    CardDisplayData data = card.GetComponent<CardDisplayData>();
 
-                    card.GetComponent<CardDisplayData>().cardName = cards[i];
+                    data.cardName = cards[i];
+                    data.cardType = AllCards.CardsData[cards[i]].type; 
+                    data.x = x % cardPerRow * xOffSet * cardSizeMultiplier;
+                    data.y = z / cardPerRow * yOffSet * cardSizeMultiplier;
 
                     ChangeMaterial(AllCards.CardsData[cards[i]].material, card);
-                    card.GetComponent<CardDisplayData>().size = cardSizeMultiplier;
+                    data.size = cardSizeMultiplier;
 
                     cardObjects[cards[i]] = card;
                     x--;

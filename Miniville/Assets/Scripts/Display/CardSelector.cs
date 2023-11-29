@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
-using System;
 using UnityEngine.EventSystems;
-using Unity.VisualScripting;
 
 public class CardSelector : MonoBehaviour
 {
@@ -17,14 +14,6 @@ public class CardSelector : MonoBehaviour
     public float speed = 2.0f;
     public Transform positionOfCard;
 
-    //bool isSelectingCard = false;
-    //bool isDeselectingCard = false;
-
-    //bool ifCardSelected = false;
-    //bool isRotated = false;
-
-    //bool isPurchasingCard = false;
-
     public SFX_Cards sfx;
 
     //states//
@@ -36,6 +25,8 @@ public class CardSelector : MonoBehaviour
     bool isRotated = false;
 
     bool wansToChangeRound = false;
+
+    bool firstCardDeselecting = false;
 
 
     RaycastHit hit;
@@ -109,6 +100,92 @@ public class CardSelector : MonoBehaviour
                 }
             }
         }
+        if (Game.instance.isTrading)
+        {
+            if (!firstCardDeselecting)
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (!selectingCard) SelectionTradingState();
+                    if (isCardSelected && !selectingCard && !deselectingCard) DeselectCard();
+                }
+                if (selectingCard && firstCardSelected)
+                {
+                    if (firstCard.position != positionOfCard.position)
+                    {
+                        MoveCardToCam(firstCard);
+                    }
+                    else
+                    {
+                        selectingCard = false;
+                    }
+                }
+                else if (selectingCard && secondCardSelected)
+                {
+                    if (secondCard.position != positionOfCard.position)
+                    {
+                        MoveCardToCam(secondCard);
+                    }
+                    else
+                    {
+                        selectingCard = false;
+                    }
+                }
+                else if (firstCardSelected && secondCardSelected)
+                {
+                    if (firstCard.position != firstCardPos)
+                    {
+                        MoveCardToPos(firstCard, firstCardPos);
+                    }
+                    else
+                    {
+                        CardDisplayData data = firstCard.GetComponent<CardDisplayData>();
+                        if (data.player != null && data.player.NbCard(data.cardName) > 1)
+                        {
+                            Destroy(firstCard.gameObject);
+                        }
+
+                        firstCard = null;
+                        firstCardPos = Vector3.zero;
+                        selectingCard = true;
+                        firstCardSelected = false;
+                    }
+                }
+                else if (secondCardSelected && !firstCardSelected)
+                {
+                    if (secondCard.position != secondCardPos)
+                    {
+                        MoveCardToPos(secondCard, secondCardPos);
+                    }
+                    else
+                    {
+                        CardDisplayData data = secondCard.GetComponent<CardDisplayData>();
+                        if (data.player != null && data.player.NbCard(data.cardName) > 1)
+                        {
+                            Destroy(secondCard.gameObject);
+                        }
+
+                        secondCardPos = Vector3.zero;
+                        secondCard = null;
+                        secondCardSelected = false;
+                        Game.instance.playerMadeChoice = true;
+                    }
+                }
+            }
+            else
+            {
+                if (firstCard.position != basePos)
+                {
+                    MoveCardToPos(firstCard, basePos);
+                }
+                else
+                {
+                    firstCardDeselecting = false;
+                    firstCard = null;
+                    firstCardPlayer = null;
+                }
+            }
+        }
     }
 
     private void SelectCard()
@@ -124,9 +201,14 @@ public class CardSelector : MonoBehaviour
                 {
                     GameObject card = Instantiate(hit.transform.gameObject, hit.transform.parent);
                     card.transform.position = basePos;
-                    card.GetComponent<CardDisplayData>().cardName = data.cardName;
-                    card.GetComponent<CardDisplayData>().player = data.player;
-                    card.GetComponent<CardDisplayData>().size = data.size;
+                    CardDisplayData data2 = card.GetComponent<CardDisplayData>();
+                    data2.cardName = data.cardName;
+                    data2.player = data.player;
+                    data2.size = data.size;
+                    data2.cardType = data.cardType;
+                    data2.x = data.x;
+                    data2.y = data.y;
+
                     Selectedcard = card.transform;
                 }
                 else
@@ -213,7 +295,7 @@ public class CardSelector : MonoBehaviour
                 data.player = Game.instance.players[Game.instance.currentPlayerIndex];
                 data.size = data.player.cardSizeMultiplier;
                 Selectedcard.SetParent(data.player.cardContent, true);
-                basePos = data.player.cardContent.position + Game.instance.players[Game.instance.currentPlayerIndex].AddToDict(Selectedcard.gameObject);
+                basePos = data.player.cardContent.TransformPoint(Game.instance.players[Game.instance.currentPlayerIndex].AddToDict(Selectedcard.gameObject));
                 wansToChangeRound = true;
             }
         }
@@ -234,5 +316,180 @@ public class CardSelector : MonoBehaviour
     {
         if (isCardSelected) { wansToChangeRound = true; Deselect(); }
         else Game.instance.ToNextState = true;
+    }
+
+    Transform firstCard;
+    Vector3 firstCardPos;
+    //Vector3 firstCardBasePos;
+    Player firstCardPlayer;
+
+    Transform secondCard;
+    Vector3 secondCardPos;
+    //Vector3 secondCardBasePos;
+    Player secondCardPlayer;
+
+    bool firstCardSelected;
+    bool secondCardSelected;
+
+
+    public void SelectionTradingState()
+    {
+        if (throwCast(mask))
+        {
+            CardDisplayData data = hit.transform.GetComponent<CardDisplayData>();
+            if (!firstCardSelected)
+            {
+                if (data.player != null && data.cardName != CardName.None && data.cardType != CardType.Building && data.player != Game.instance.players[Game.instance.currentPlayerIndex])
+                {
+                    if (data.player.NbCard(data.cardName) > 1)
+                    {
+                        GameObject card = Instantiate(hit.transform.gameObject, hit.transform.parent);
+                        card.transform.position = hit.transform.position;
+                        CardDisplayData data2 = card.GetComponent<CardDisplayData>();
+                        data2.cardName = data.cardName;
+                        data2.player = data.player;
+                        data2.size = data.size;
+                        data2.cardType = data.cardType;
+                        data2.x = data.x;
+                        data2.y = data.y;
+
+
+                        firstCardSelected = true;
+                        selectingCard = true;
+
+
+                        firstCard = card.transform;
+                        //firstCardBasePos = hit.transform.localPosition;
+                        firstCardPlayer = data2.player;
+
+
+                        Game.instance.tradingCardUI1.SetActive(false);
+                        Game.instance.tradingCardUI2.SetActive(true);
+                    }
+                    else
+                    {
+
+
+                        firstCardSelected = true;
+                        selectingCard = true;
+
+
+                        firstCard = hit.transform;
+                        //firstCardBasePos = hit.transform.localPosition;
+                        firstCardPlayer = data.player;
+
+
+                        Game.instance.tradingCardUI1.SetActive(false);
+                        Game.instance.tradingCardUI2.SetActive(true);
+                    }
+                }
+            }
+            else
+            {
+                if (data.player != null && data.cardName != CardName.None && data.cardType != CardType.Building && data.player == Game.instance.players[Game.instance.currentPlayerIndex])
+                {
+                    if (data.player.NbCard(data.cardName) > 1)
+                    {
+                        GameObject card = Instantiate(hit.transform.gameObject, hit.transform.parent);
+                        card.transform.position = hit.transform.position;
+                        CardDisplayData data2 = card.GetComponent<CardDisplayData>();
+                        data2.cardName = data.cardName;
+                        data2.player = data.player;
+                        data2.size = data.size;
+                        data2.cardType = data.cardType;
+                        data2.x = data.x;
+                        data2.y = data.y;
+                        secondCardSelected = true;
+                        selectingCard = true;
+
+
+                        secondCard = card.transform;
+                        //secondCardBasePos = hit.transform.localPosition;
+                        secondCardPlayer = data2.player;
+                    }
+                    else
+                    {
+                        secondCardSelected = true;
+                        selectingCard = true;
+
+
+                        secondCard = hit.transform;
+                        //secondCardBasePos = hit.transform.localPosition;
+                        secondCardPlayer = data.player;
+                    }
+
+                    firstCard.SetParent(secondCardPlayer.cardContent, true);
+                    secondCard.SetParent(firstCardPlayer.cardContent, true);
+
+                    
+                    firstCardPlayer.PileCards[firstCard.GetComponent<CardDisplayData>().cardName]--;
+                    if (firstCardPlayer.NbCard(firstCard.GetComponent<CardDisplayData>().cardName) == 0)
+                        firstCardPlayer.cardObjects.Remove(firstCard.GetComponent<CardDisplayData>().cardName);
+
+                    firstCardPlayer.GiveCard(secondCard.GetComponent<CardDisplayData>().cardName);
+
+                    
+                    secondCardPlayer.PileCards[secondCard.GetComponent<CardDisplayData>().cardName]--;
+                    if (secondCardPlayer.NbCard(secondCard.GetComponent<CardDisplayData>().cardName) == 0)
+                        secondCardPlayer.cardObjects.Remove(secondCard.GetComponent<CardDisplayData>().cardName);
+
+                    secondCardPlayer.GiveCard(firstCard.GetComponent<CardDisplayData>().cardName);
+
+                    secondCardPos = firstCardPlayer.cardContent.TransformPoint(firstCardPlayer.AddToDict(secondCard.gameObject));
+
+                    firstCardPos = secondCardPlayer.cardContent.TransformPoint(secondCardPlayer.AddToDict(firstCard.gameObject));
+
+
+                    //firstCardPlayer.ReloadCard();
+
+
+
+                    firstCard.GetComponent<CardDisplayData>().player = secondCardPlayer;
+                    secondCard.GetComponent<CardDisplayData>().player = firstCardPlayer;
+
+                    Game.instance.playerToSteal = firstCardPlayer;
+                    Game.instance.tradingCardUI2.SetActive(false);
+
+                }
+            }
+
+        }
+        else
+        {
+            if (firstCardSelected)
+                DeselectTradingCard();
+        }
+    }
+
+    void DeselectTradingCard()
+    {
+        basePos = firstCardPlayer.cardContent.TransformPoint(new Vector3(firstCard.GetComponent<CardDisplayData>().x, 0, firstCard.GetComponent<CardDisplayData>().y));
+
+        firstCardDeselecting = true;
+        firstCardSelected = false;
+    }
+
+    public void SelectPlayerToStealCoins(int index)
+    {
+        if (Game.instance.isStealingMoney)
+        {
+            Game.instance.playerToSteal = Game.instance.players[index];
+            Game.instance.playerMadeChoice = true;
+        }
+    }
+
+
+
+    public void MoveCardToCam(Transform card)
+    {
+        card.position = Vector3.MoveTowards(card.position, positionOfCard.position, speed * Time.deltaTime);
+        card.localScale = Vector3.MoveTowards(card.localScale, Vector3.one, (speed * Time.deltaTime) / (basePos - positionOfCard.position).magnitude);
+    }
+
+    public void MoveCardToPos(Transform card, Vector3 pos)
+    {
+        card.position = Vector3.MoveTowards(card.position, pos, speed * Time.deltaTime);
+        card.localScale = Vector3.MoveTowards(card.localScale, card.GetComponent<CardDisplayData>().size * Vector3.one, (speed * Time.deltaTime) / (basePos - positionOfCard.position).magnitude);
+
     }
 }

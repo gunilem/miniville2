@@ -18,6 +18,10 @@ public class Player : MonoBehaviour
     [SerializeField] public Button purchaseCardButton;
     [SerializeField] public Button nextRoundButton;
 
+    public GameObject Ui;
+    public Image UiImage;
+    public Button UIButtonStealMoney;
+
     public bool hasStation = false;
 
     int x = 0;
@@ -71,7 +75,7 @@ public class Player : MonoBehaviour
             PileCards.Add(name, 0);
         }
         PileCards[CardName.WheatFields] = 1;
-        PileCards[CardName.Bakery] = 1;
+        PileCards[CardName.Bakery] = 1; 
         //ajouter tous les monuments désactivé
         foreach (MonumentName name in AllCards.MonumentsData.Keys)
         {
@@ -156,9 +160,14 @@ public class Player : MonoBehaviour
                     card.transform.localPosition = NextPlaceOnDeck();
                     card.transform.rotation = Quaternion.identity;
 
-                    card.GetComponent<CardDisplayData>().cardName = cards[i];
-                    card.GetComponent<CardDisplayData>().size = cardSizeMultiplier;
-                    card.GetComponent<CardDisplayData>().player = this;
+                    CardDisplayData data = card.GetComponent<CardDisplayData>();
+
+                    data.cardName = cards[i];
+                    data.size = cardSizeMultiplier;
+                    data.player = this;
+                    data.cardType = AllCards.CardsData[cards[i]].type;
+                    data.x = x % cardPerRow * xOffSet * cardSizeMultiplier;
+                    data.y = z * yOffSet * cardSizeMultiplier;
 
                     ChangeMaterial(AllCards.CardsData[cards[i]].material, card, 2);
 
@@ -195,9 +204,12 @@ public class Player : MonoBehaviour
                 monument.transform.rotation = Quaternion.identity;
                 monument.transform.Rotate(Vector3.forward, 180);
 
-                monument.GetComponent<CardDisplayData>().monumentName = monuments[i];
-                monument.GetComponent<CardDisplayData>().size = monumentSizeMultiplier;
-                monument.GetComponent<CardDisplayData>().player = this;
+                CardDisplayData data = monument.GetComponent<CardDisplayData>();
+                data.monumentName = monuments[i];
+                data.size = monumentSizeMultiplier;
+                data.player = this;
+                data.x = x1 % cardPerRow * xOffSet * cardSizeMultiplier;
+                data.y = z * yOffSet * cardSizeMultiplier;
 
                 ChangeMaterial(AllCards.MonumentsData[monuments[i]].tailMaterial, monument, 1);
                 ChangeMaterial(AllCards.MonumentsData[monuments[i]].headMaterial, monument, 2);
@@ -222,12 +234,22 @@ public class Player : MonoBehaviour
 
         for (int i = 0; i < cards.Count; i++)
         {
-            if (PileCards[cards[i]] != 0)
+            if (NbCard(cards[i]) > 0)
             {
+                Debug.Log(cards[i]);
                 cardObjects[cards[i]].transform.localPosition = NextPlaceOnDeck();
+                cardObjects[cards[i]].GetComponent<CardDisplayData>().x = x % cardPerRow * xOffSet * cardSizeMultiplier;
+                cardObjects[cards[i]].GetComponent<CardDisplayData>().y = z * yOffSet * cardSizeMultiplier;
                 x++;
                 if (x % cardPerRow == 0)
                     z++;
+            }
+            else if (cardObjects.ContainsKey(cards[i]))
+            {
+                Debug.Log("hjvkgcbi");
+                Destroy(cardObjects[cards[i]]);
+                cardObjects.Remove(cards[i]);
+                x--;
             }
         }
 
@@ -235,6 +257,8 @@ public class Player : MonoBehaviour
         for (int i = 0; i < monuments.Count; i++)
         {
             MonumentsObjects[monuments[i]].transform.localPosition = Vector3.right * ((x1 % 4) + xMonumentPreOffSet) * xOffSet * monumentSizeMultiplier + Vector3.forward * (z + 1) * yOffSet * monumentSizeMultiplier;
+            MonumentsObjects[monuments[i]].GetComponent<CardDisplayData>().x = x1 % cardPerRow * xOffSet * cardSizeMultiplier;
+            MonumentsObjects[monuments[i]].GetComponent<CardDisplayData>().y = z * yOffSet * cardSizeMultiplier;
             x1++;
         }
     }
@@ -257,11 +281,13 @@ public class Player : MonoBehaviour
         if (!cardObjects.ContainsKey(cardData.cardName))
         {
             cardObjects[cardData.cardName] = card;
+            cardData.x = x % cardPerRow * xOffSet * cardSizeMultiplier;
+            cardData.y = z * yOffSet * cardSizeMultiplier;
             return NextPlaceOnDeck();
         }
         else
         {
-            return cardObjects[cardData.cardName].transform.localPosition;
+            return new Vector3(cardObjects[cardData.cardName].GetComponent<CardDisplayData>().x , 0, cardObjects[cardData.cardName].GetComponent<CardDisplayData>().y);
         }
     }
 
