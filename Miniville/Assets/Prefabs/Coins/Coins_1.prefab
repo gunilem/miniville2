@@ -187,4 +187,4 @@ MonoBehaviour:
       Data2: 1120440672
       Data3: -1614584397
       Data4: -1168958620
-    Path: event:/Coin/CoinCollide
+    Path: event:/CoinCollide

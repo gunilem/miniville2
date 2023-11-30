@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{87391b7c-2d0f-4c92-8d57-a37507dc6c06}">
+		<property name="assetPath">
+			<value>UI/UISkip_Low-003.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.99747916666666669</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bc24fd2c-e7e6-48a6-b6b0-9623b6e31f0b}</destination>
+		</relationship>
+	</object>
+</objects>

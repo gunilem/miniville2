@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{f66d69b9-9bc8-44db-b3eb-6f536bd98451}">
+		<property name="color">
+			<value>Green</value>
+		</property>
 		<property name="name">
 			<value>DiceBounce</value>
 		</property>

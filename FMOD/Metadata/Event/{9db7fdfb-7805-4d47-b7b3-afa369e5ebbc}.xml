@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{9db7fdfb-7805-4d47-b7b3-afa369e5ebbc}">
+		<property name="color">
+			<value>Green</value>
+		</property>
 		<property name="name">
 			<value>Music</value>
 		</property>
@@ -109,6 +112,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{1433e01c-00be-4d19-b5d8-c60ad3d4eeea}">
+		<property name="volume">
+			<value>-10</value>
+		</property>
 		<relationship name="modulators">
 			<destination>{a283fccf-a91f-4c9a-b908-b1b268f1b4ce}</destination>
 		</relationship>

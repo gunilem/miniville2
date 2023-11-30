@@ -81,6 +81,7 @@ public class Game : MonoBehaviour
         for (int i = 0; i < numberOfPlayers; i++)
         {
             players[i].Ui.SetActive(true);
+            players[i].UIButtonStealMoney.interactable = false;
         }
 
         players[currentPlayerIndex].UiImage.color = new Color32(255, 255, 255, 255);
@@ -367,6 +368,7 @@ public class Game : MonoBehaviour
                 if (p != players[currentPlayerIndex])
                 {
                     p.UiImage.color = Color.white;
+                    p.UIButtonStealMoney.interactable = true;
                 }
             }
 
@@ -425,6 +427,7 @@ public class Game : MonoBehaviour
                 if (p != players[currentPlayerIndex])
                 {
                     p.UiImage.color = Color.white;
+                    p.UIButtonStealMoney.interactable = true;
                 }
             }
 
@@ -460,7 +463,7 @@ public class Game : MonoBehaviour
         isStealingMoney = false;
         tradingMoneyUI.SetActive(false);
 
-        players[currentPlayerIndex].UIButtonStealMoney.interactable = true;
+        players[currentPlayerIndex].UIButtonStealMoney.interactable = false;
         foreach (Player p in players)
         {
             if (p != players[currentPlayerIndex])

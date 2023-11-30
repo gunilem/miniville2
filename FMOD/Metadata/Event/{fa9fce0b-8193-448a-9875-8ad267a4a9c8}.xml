@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{fa9fce0b-8193-448a-9875-8ad267a4a9c8}">
+		<property name="color">
+			<value>Green</value>
+		</property>
 		<property name="name">
 			<value>Card_ToBack</value>
 		</property>
