@@ -39,7 +39,7 @@ public class Game : MonoBehaviour
     Dictionary<CardName, GameObject> cardObjects = new Dictionary<CardName, GameObject>();
 
     [Header("Settings")]
-    [SerializeField][Range(1,4)] int numberOfPlayers = 1;
+    [Range(1, 4)]public int numberOfPlayers = 1;
 
     [Header("cardDisplay")]
     [SerializeField] GameObject cardPrefab;
@@ -77,6 +77,7 @@ public class Game : MonoBehaviour
         FillPile();
         
         currentPlayerIndex = 0;
+        
 
         for (int i = 0; i < numberOfPlayers; i++)
         {
@@ -93,6 +94,14 @@ public class Game : MonoBehaviour
     }
     void Update()
     {
+        /*Sandro DEBUG
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            
+            players[1].PileCards[CardName.CoffeeShop] = 1;
+            players[1].PileMonuments[MonumentName.Mall] = true;
+            Debug.Log(string.Format("Le joueur 2 possède {0} cofee shop et possède le Mall est {1}", players[1].PileCards[CardName.CoffeeShop], players[1].PileMonuments[MonumentName.Mall]));
+        }Sandro DEBUG */
         state();
     }
 
@@ -210,10 +219,12 @@ public class Game : MonoBehaviour
                     //si c'est un carte rouge, qu'elle a le bon numéro et que le joueur la possède
                     if (AllCards.CardsData[name].color == CardColor.Red && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult)) 
                     {
+                        int amusementParkExtra = 0;
+                        if (players[i].PileMonuments[MonumentName.Mall]) amusementParkExtra = 1; //verifier que le joueur à qui on doit de l'argent à le centre commercial car si c'est le cas c'est café(donc carte rouge) coute +1
                         Debug.Log(string.Format("Player{0} donen argent à Player{1} grâce à ces {2}{3}", currentPlayerIndex + 1, i + 1, players[i].PileCards[name], name));
                         for (int y = 0; y < players[i].PileCards[name]; y++)
                         {
-                            players[currentPlayerIndex].PaidOtherPlayer(players[i], AllCards.allCards[name].Action());
+                            players[currentPlayerIndex].PaidOtherPlayer(players[i], AllCards.allCards[name].Action() + amusementParkExtra);
                         }
                     }
 
@@ -245,12 +256,13 @@ public class Game : MonoBehaviour
                         //si c'est pas une carte rouge, qu'elle a le bon numéro et que le joueur la possède
                         if (!(AllCards.CardsData[name].color == CardColor.Red) && players[i].PileCards[name] > 0 && AllCards.HaveTheRightDice(name, currentDiceResult))
                         {
-                            //if (AllCards.CardsData[name].color == CardColor.Purple) PurpleCardAction(name); //si c'est une carte violette
+                            int amusementParkExtra = 0;
+                            if (players[i].PileMonuments[MonumentName.Mall] && AllCards.CardsData[name].type == CardType.Store) amusementParkExtra = 1; //si le joueur à le centre commercial ces cartes de type store augmente leur rente de 1
 
                             for (int y = 0; y < players[i].PileCards[name]; y++)
                             {
                                 AllCards.allCards[name].index = i;
-                                players[i].Coins += AllCards.allCards[name].Action();
+                                players[i].Coins += AllCards.allCards[name].Action() + amusementParkExtra;
 
                             }
                         }
@@ -309,6 +321,7 @@ public class Game : MonoBehaviour
 
     public void CheckPlayerHasWon()
     {
+        CameraScript.instance.GoToOriginalPos();
         var currentPlayer = players[currentPlayerIndex];
         var hasWon = true;
 

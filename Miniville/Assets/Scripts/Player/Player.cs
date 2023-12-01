@@ -21,11 +21,13 @@ public class Player : MonoBehaviour
     public GameObject Ui;
     public Image UiImage;
     public Button UIButtonStealMoney;
+    public GameObject canvas;
 
     public bool hasStation = false;
+    [Header("Coordonnés")]
+    [SerializeField]int x = 0;
+    [SerializeField] int z = 0;
 
-    int x = 0;
-    int z = 0;
 
 
     [Header("cardDisplay")]
@@ -119,17 +121,18 @@ public class Player : MonoBehaviour
 
     public void PaidOtherPlayer(Player other, int price)
     {
-        if(Coins <= 0)
+        if(Coins <= 0) //si on a pas d'argent il ce passe juste rien
         {
             return;
         }
-        else if(Coins - price <= 0)
+        else if(Coins - price < 0) //si on à pas assez mais quand même un peu on lui donne tout ce qu'il nous reste
         {
             other.Coins += this.Coins;
             this.Coins -= price;
         }
-        else
+        else //sinon on donne juste le prix convenu
         {
+            
             other.Coins += price;
             this.Coins -= price;
         }
