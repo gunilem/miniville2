@@ -2258,7 +2258,10 @@ MonoBehaviour:
   Ui: {fileID: 8731081587490983552}
   UiImage: {fileID: 7118849564886740516}
   UIButtonStealMoney: {fileID: 3556561548713764267}
+  canvas: {fileID: 0}
   hasStation: 0
+  x: 0
+  z: 0
   cardPrefab: {fileID: 4099412203085230699, guid: 8903a7788bab256449a9a6ad0041fc4a, type: 3}
   cardContent: {fileID: 2425318127448001632}
   xOffSet: 1.5
@@ -2437,11 +2440,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: 1673913850
-      Data2: 1336627501
-      Data3: -1750867042
-      Data4: 238229705
-    Path: event:/UI/UIConfirm
+      Data1: 1739449114
+      Data2: 1231297284
+      Data3: 530150786
+      Data4: 495404024
+    Path: event:/UI/UISkip
   Event: 
   PlayEvent: 0
   StopEvent: 0
