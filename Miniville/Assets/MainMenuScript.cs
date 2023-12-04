@@ -1,12 +1,15 @@
+using FMODUnity;
 using System.ComponentModel;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class MainMenuScript : MonoBehaviour
 {
     public static MainMenuScript instance;
+
     private void Awake()
     {
         if (instance != null)
@@ -20,7 +23,9 @@ public class MainMenuScript : MonoBehaviour
     [SerializeField] TMP_Text numberOfPlayerUI;
     [SerializeField] TMP_Text numberOf_IA_UI;
     [Header("Data")]
-    [SerializeField]private int _numberOfPlayers = 2;
+    [SerializeField] private int _numberOfPlayers = 2;
+    [Header("Invoke")]
+    [SerializeField] public UnityEvent onChangeScene;
     public int numberOfPlayers { 
         get { 
             return _numberOfPlayers;
@@ -74,6 +79,7 @@ public class MainMenuScript : MonoBehaviour
 
     public void PlayButton()
     {
+        onChangeScene.Invoke();
         SceneManager.LoadScene("MAIN_GAME");
         Debug.Log("Cette ligne à été appeler après le load de scene");
 
