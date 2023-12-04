@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < 1 + Convert.ToInt16(playerHasStation); i++)
         {
-            dices[i].TrowDice();
+            dices[i].ThrowDice();
         }
         yield return new WaitForSeconds(waitDiceFinalResult);
         for (int i = 0; i < 1 + Convert.ToInt16(playerHasStation); i++)

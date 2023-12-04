@@ -15,6 +15,8 @@ public class Game : MonoBehaviour
     [SerializeField] public GameObject tradingCardUI2;
     [SerializeField] public GameObject tradingMoneyUI;
 
+    [SerializeField] Collider tableCollider;
+
     Color32 selectedColor = new Color32(138, 142, 163, 255);
 
     public bool isTrading;
@@ -26,6 +28,8 @@ public class Game : MonoBehaviour
     bool rerollDice = false;
 
     int DiceThrown;
+
+    [SerializeField] LayerMask diceMask;
 
 
     [Header("Data")]
@@ -136,55 +140,52 @@ public class Game : MonoBehaviour
         {
             dices[0].ResetDice(players[currentPlayerIndex].diceThrowingPos.transform.position);
             dices[1].ResetDice(dices[1].DicePosAtBegin);
-            dices[0].TrowDice();
+            dices[0].ThrowDice();
         }
         else
         {
             dices[0].ResetDice(players[currentPlayerIndex].diceThrowingPos.transform.position);
-            dices[0].TrowDice();
+            dices[0].ThrowDice();
             dices[1].ResetDice(players[currentPlayerIndex].diceThrowingPos.transform.position);
-            dices[1].TrowDice();
+            dices[1].ThrowDice();
         }
         players[currentPlayerIndex].roll1DiceButton.interactable = false;
         players[currentPlayerIndex].roll2DiceButton.interactable = false;
         DiceThrown = nbOFDice;
+        tableCollider.enabled = false;
+
         state = WaitForDiceResult;
     }
 
     public void WaitForDiceResult()
     {
         int _result = 0;
-        bool _allDicesHaveAResult = true;
         for (int i = 0; i < DiceThrown; i++)
         {
-            int _diceResult = dices[i].result;
-            if (_diceResult != -1)
+            Dice dice = dices[i].GetComponent<Dice>();
+            if (dice.result == -1)
             {
-                _result += _diceResult;
+                _result = 0;
+                return;
             }
-            else
-            {
-                _allDicesHaveAResult = false;
-            }
+            _result += dice.result;
         }
-
-        if (_allDicesHaveAResult)
-        {
-            if (useTrickDiceResult)
-                currentDiceResult = trickDiceResult;
-            else
-                currentDiceResult = _result;
+        
+        if (useTrickDiceResult)
+            currentDiceResult = trickDiceResult;
+        else
+            currentDiceResult = _result;
             
-            if (players[currentPlayerIndex].PileMonuments[MonumentName.AmusementPark] && DiceThrown > 1 && dices[0].result == dices[1].result) //si ta le parc d'attraction et que ta fait un double tu met replay true pour rejouer au prochain tour
-                players[currentPlayerIndex].replay = true;
-            if (players[currentPlayerIndex].PileMonuments[MonumentName.RadioTower] && players[currentPlayerIndex].firstThrow) //si le joueur à la tour radio et que c'est son premier lancer, demander s'il veux relancer
-            {
-                players[currentPlayerIndex].firstThrow = false;
-                rerollUi.SetActive(true);
-                state = WaitForRerollDice;
-            }
-            else state = PaidOtherPlayers;
+        if (players[currentPlayerIndex].PileMonuments[MonumentName.AmusementPark] && DiceThrown > 1 && dices[0].result == dices[1].result) //si ta le parc d'attraction et que ta fait un double tu met replay true pour rejouer au prochain tour
+            players[currentPlayerIndex].replay = true;
+        if (players[currentPlayerIndex].PileMonuments[MonumentName.RadioTower] && players[currentPlayerIndex].firstThrow) //si le joueur à la tour radio et que c'est son premier lancer, demander s'il veux relancer
+        {
+            players[currentPlayerIndex].firstThrow = false;
+            rerollUi.SetActive(true);
+            state = WaitForRerollDice;
         }
+        else state = PaidOtherPlayers;
+        
     }
 
     public void WaitForRerollDice()

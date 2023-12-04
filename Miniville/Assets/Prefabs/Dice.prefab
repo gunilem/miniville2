@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 6349458576231507632}
   - component: {fileID: 1858704147270765795}
   - component: {fileID: 6795545210485219021}
+  - component: {fileID: 7693463728096630048}
   m_Layer: 0
   m_Name: Dice
   m_TagString: Untagged
@@ -261,9 +262,11 @@ MonoBehaviour:
   gravity: 8
   torqueForce: 8
   throwForce: 5
-  throwDice: 0
-  result: 0
   DicePosAtBegin: {x: 0, y: 0, z: 0}
+  collider: {fileID: 0}
+  result: 0
+  StopDice: 1
+  cooldown: 0.1
 --- !u!114 &6795545210485219021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,6 +286,19 @@ MonoBehaviour:
       Data3: 1399843763
       Data4: 1367660907
     Path: event:/DiceBounce
+--- !u!114 &7693463728096630048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662805324054296546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be1b3fa7e4bd014ba6af820ccfb9149, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mc: {fileID: 0}
 --- !u!1001 &7771984992985933961
 PrefabInstance:
   m_ObjectHideFlags: 0
