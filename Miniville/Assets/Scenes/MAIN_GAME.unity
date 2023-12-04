@@ -2580,6 +2580,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47bb1ac39544aa64ebd8e456ec108a6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventMonument:
+    Guid:
+      Data1: -1248558192
+      Data2: 1332690908
+      Data3: 631201921
+      Data4: 40837275
+    Path: event:/Card/Monuments
   rerollUi: {fileID: 1378200300}
   tradingCardUI1: {fileID: 2115924903}
   tradingCardUI2: {fileID: 183179176}

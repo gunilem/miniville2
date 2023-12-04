@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using FMOD.Studio;
 
 public class Player : MonoBehaviour 
 {

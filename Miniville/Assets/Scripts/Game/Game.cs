@@ -5,11 +5,15 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using FMODUnity;
+using FMOD.Studio;
 
 public class Game : MonoBehaviour
 {
     public static Game instance;
 
+    [SerializeField] private EventReference eventMonument;
+    private EventInstance eventInstance;
     [SerializeField] GameObject rerollUi;
     [SerializeField] public GameObject tradingCardUI1;
     [SerializeField] public GameObject tradingCardUI2;
@@ -80,7 +84,9 @@ public class Game : MonoBehaviour
     }
     void Start()
     {
-        if(MainMenuScript.instance != null)
+        eventInstance = RuntimeManager.CreateInstance(eventMonument);
+
+        if (MainMenuScript.instance != null)
         {
             numberOfPlayers = MainMenuScript.instance.numberOfPlayers; numberOfIA = MainMenuScript.instance.numberOfIA;
             Destroy(MainMenuScript.instance.transform.gameObject);
@@ -321,6 +327,8 @@ public class Game : MonoBehaviour
         var currentPlayer = players[currentPlayerIndex];
 
         bool hasBought = currentPlayer.TryBuyMonument(cardPlayerWantToBuy);
+        if (hasBought)
+            eventInstance.start();
         return hasBought;
     }
 
