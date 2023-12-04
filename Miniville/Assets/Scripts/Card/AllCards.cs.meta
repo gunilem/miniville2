@@ -1,14 +1,10 @@
 fileFormatVersion: 2
-<<<<<<<< Updated upstream:Miniville/Assets/Scripts/Card/AllCards.cs.meta
 guid: 8282ec58840b4a340a07f5c5a139a475
-========
-guid: b6f7b366fdb211d43885a3840eddc143
->>>>>>>> Stashed changes:Miniville/Assets/Scripts/Dice.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
-  executionOrder: 0
+  executionOrder: 3
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

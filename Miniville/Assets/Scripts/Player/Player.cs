@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
     public bool firstThrow = true;
     public bool replay = false;
 
-    public void Start()
+    public void Awake()
     {
         //Rempli le dico et met à 1 WheatFields et Bkery
         foreach(CardName name in AllCards.allCards.Keys)

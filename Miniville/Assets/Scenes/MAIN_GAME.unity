@@ -2682,6 +2682,7 @@ MonoBehaviour:
   dices:
   - {fileID: 1541899425}
   - {fileID: 1811857055}
+  mainMenuData: {fileID: 0}
   players:
   - {fileID: 227416037}
   - {fileID: 1130179383}
@@ -2690,6 +2691,7 @@ MonoBehaviour:
   currentPlayerIndex: 0
   currentDiceResult: 11
   numberOfPlayers: 2
+  numberOfIA: 0
   cardPrefab: {fileID: 4099412203085230699, guid: 8903a7788bab256449a9a6ad0041fc4a, type: 3}
   cardContent: {fileID: 252157103}
   xOffSet: 1.5
@@ -2698,8 +2700,8 @@ MonoBehaviour:
   cardPerRow: 5
   ToNextState: 0
   isPurchasing: 0
-  useTrickDiceResult: 1
-  trickDiceResult: 6
+  useTrickDiceResult: 0
+  trickDiceResult: 3
 --- !u!114 &1575243909
 MonoBehaviour:
   m_ObjectHideFlags: 0

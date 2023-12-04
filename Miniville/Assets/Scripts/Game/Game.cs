@@ -30,6 +30,7 @@ public class Game : MonoBehaviour
 
     [Header("Data")]
     [SerializeField] Dice[] dices = new Dice[2];
+    public GameObject mainMenuData;
 
     public List<Player> players = new List<Player>();
     public int currentPlayerIndex;
@@ -40,6 +41,7 @@ public class Game : MonoBehaviour
 
     [Header("Settings")]
     [Range(1, 4)]public int numberOfPlayers = 1;
+    public int numberOfIA;
 
     [Header("cardDisplay")]
     [SerializeField] GameObject cardPrefab;
@@ -74,10 +76,13 @@ public class Game : MonoBehaviour
     }
     void Start()
     {
-        FillPile();
-        
+        if(MainMenuScript.instance != null)
+        {
+            numberOfPlayers = MainMenuScript.instance.numberOfPlayers; numberOfIA = MainMenuScript.instance.numberOfIA;
+            Destroy(MainMenuScript.instance.transform.gameObject);
+        }
+        FillPile();        
         currentPlayerIndex = 0;
-        
 
         for (int i = 0; i < numberOfPlayers; i++)
         {
@@ -88,7 +93,6 @@ public class Game : MonoBehaviour
         players[currentPlayerIndex].UiImage.color = new Color32(255, 255, 255, 255);
 
         ReloadCard();
-
 
         state = PlayerTrowDices;
     }
@@ -120,7 +124,7 @@ public class Game : MonoBehaviour
     public void PlayerTrowDices()
     {
         
-
+        Debug.Log("PlayersPileMonumentSize : " + players[currentPlayerIndex].PileMonuments.Keys.Count);
         bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
         if (playerHasStation) players[currentPlayerIndex].roll2DiceButton.interactable = true;
         players[currentPlayerIndex].roll1DiceButton.interactable = true;
