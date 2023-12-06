@@ -33,9 +33,11 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W) || Input.mouseScrollDelta.y > 0) GoToPlayer();
-        if (Input.GetKeyDown(KeyCode.S) || Input.mouseScrollDelta.y < 0) GoToOriginalPos();
-
+        if (Game.instance.isPurchasing || Game.instance.PreThrowingDiceState)
+        {
+            if (Input.GetKeyDown(KeyCode.W) || Input.mouseScrollDelta.y > 0) GoToPlayer();
+            if (Input.GetKeyDown(KeyCode.S) || Input.mouseScrollDelta.y < 0) GoToOriginalPos();
+        }
         Move();
     }
 

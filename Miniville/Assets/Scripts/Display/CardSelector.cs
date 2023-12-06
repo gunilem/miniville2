@@ -14,6 +14,8 @@ public class CardSelector : MonoBehaviour
     public float speed = 2.0f;
     public Transform positionOfCard;
 
+    public Transform previousParent;
+
     public SFX_Cards sfx;
 
     //states//
@@ -33,7 +35,7 @@ public class CardSelector : MonoBehaviour
 
     private void Update()
     {
-        if (Game.instance.isPurchasing)
+        if (Game.instance.isPurchasing || Game.instance.PreThrowingDiceState)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -88,7 +90,15 @@ public class CardSelector : MonoBehaviour
                     }
                     if (data.player != null) data.player.ReloadCard();
 
-                    Game.instance.players[Game.instance.currentPlayerIndex].nextRoundButton.interactable = true;
+                    if (Game.instance.isPurchasing)
+                        Game.instance.players[Game.instance.currentPlayerIndex].nextRoundButton.interactable = true;
+
+                    if (Game.instance.PreThrowingDiceState)
+                    {
+                        Game.instance.players[Game.instance.currentPlayerIndex].roll1DiceButton.interactable = true;
+                        Game.instance.players[Game.instance.currentPlayerIndex].roll2DiceButton.interactable = true;
+                    }
+
 
                     Selectedcard = null;
                     basePos = Vector3.zero;
@@ -100,7 +110,7 @@ public class CardSelector : MonoBehaviour
                 }
             }
         }
-        if (Game.instance.isTrading)
+        else if (Game.instance.isTrading)
         {
             if (!firstCardDeselecting)
             {
@@ -221,6 +231,16 @@ public class CardSelector : MonoBehaviour
             isCardSelected = true;
             selectingCard = true;
 
+            previousParent = Selectedcard.parent;
+            Selectedcard.SetParent(positionOfCard, true);
+
+            if (Game.instance.PreThrowingDiceState)
+            {
+                Debug.Log("klj654874v");
+                Game.instance.players[Game.instance.currentPlayerIndex].roll1DiceButton.interactable = false;
+                Game.instance.players[Game.instance.currentPlayerIndex].roll2DiceButton.interactable = false;
+            }
+
             //SFX
             sfx.PlaySound("cardToFront", Selectedcard);
         }
@@ -252,6 +272,8 @@ public class CardSelector : MonoBehaviour
         }
         Game.instance.players[Game.instance.currentPlayerIndex].purchaseCardButton.interactable = false;
 
+        previousParent = Game.instance.players[Game.instance.currentPlayerIndex].cardContent;
+        Selectedcard.SetParent(previousParent);
         //SFX
         sfx.PlaySound("cardToBack", Selectedcard);
     }

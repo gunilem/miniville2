@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using FMODUnity;
 using FMOD.Studio;
+using TMPro;
 
 public class Game : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class Game : MonoBehaviour
     [SerializeField] public GameObject tradingCardUI1;
     [SerializeField] public GameObject tradingCardUI2;
     [SerializeField] public GameObject tradingMoneyUI;
+
+    [SerializeField] TextMeshProUGUI diceCount;
 
     [SerializeField] Collider tableCollider;
 
@@ -32,6 +35,8 @@ public class Game : MonoBehaviour
     bool rerollDice = false;
 
     int DiceThrown;
+
+    public bool PreThrowingDiceState = false;
 
     [SerializeField] LayerMask diceMask;
 
@@ -133,15 +138,21 @@ public class Game : MonoBehaviour
 
     public void PlayerTrowDices()
     {
-        
+        diceCount.text = "";
+        PreThrowingDiceState = true;
         Debug.Log("PlayersPileMonumentSize : " + players[currentPlayerIndex].PileMonuments.Keys.Count);
         bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
         if (playerHasStation) players[currentPlayerIndex].roll2DiceButton.interactable = true;
         players[currentPlayerIndex].roll1DiceButton.interactable = true;
+        state = Wait;
     }
+
+    public void Wait() {; }
 
     public void ThrowDice(int nbOFDice)
     {
+        PreThrowingDiceState = false;
+        CameraScript.instance.GoToOriginalPos();
         if (nbOFDice == 1)
         {
             dices[0].ResetDice(players[currentPlayerIndex].diceThrowingPos.transform.position);
@@ -176,7 +187,8 @@ public class Game : MonoBehaviour
             }
             _result += dice.result;
         }
-        
+        diceCount.text = _result.ToString();
+
         if (useTrickDiceResult)
             currentDiceResult = trickDiceResult;
         else
