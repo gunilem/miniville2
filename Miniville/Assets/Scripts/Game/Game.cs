@@ -73,6 +73,8 @@ public class Game : MonoBehaviour
 
     public bool isPurchasing = false;
 
+    private bool currentPlayerIsIA = false;
+
     [Header("Dice Debug")]
     [SerializeField] bool useTrickDiceResult;
     [SerializeField] int trickDiceResult;
@@ -138,13 +140,26 @@ public class Game : MonoBehaviour
 
     public void PlayerTrowDices()
     {
+        currentPlayerIsIA = (numberOfIA >= numberOfPlayers - currentPlayerIndex);
+
         diceCount.text = "";
         PreThrowingDiceState = true;
         Debug.Log("PlayersPileMonumentSize : " + players[currentPlayerIndex].PileMonuments.Keys.Count);
         bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
         if (playerHasStation) players[currentPlayerIndex].roll2DiceButton.interactable = true;
         players[currentPlayerIndex].roll1DiceButton.interactable = true;
-        state = Wait;
+        
+        if (currentPlayerIsIA)
+        {
+            if ((int)UnityEngine.Random.Range(0, 2) == 0 && playerHasStation)
+                ThrowDice(2);
+            else
+                ThrowDice(1);
+        }
+        else
+        {
+            state = Wait;
+        }
     }
 
     public void Wait() {; }
@@ -433,6 +448,19 @@ public class Game : MonoBehaviour
 
     void WaitToChooseTheCardToSteal() //étape 1 Buisness center action
     {
+        if (currentPlayerIsIA)
+        {
+            int toSteal = 999;
+            while (toSteal > numberOfPlayers && toSteal == currentPlayerIndex)
+            {
+                toSteal = (int)UnityEngine.Random.Range(0, numberOfPlayers);
+            }
+            playerToSteal = players[toSteal];
+            //ICI appeler la méthode magique de Paul qui permet d'échanger la carte A et la carte B
+
+            state = BuisnessCenterAction;
+        }
+        else
         if (playerMadeChoice)
         {
             //ICI redéfinir cardToSteal et lier playerToSteal au joueur qui avait la carte
@@ -481,6 +509,17 @@ public class Game : MonoBehaviour
 
     void WaitToChoosePlayerToStealMoney() //étape 1 TV station action
     {
+        if (currentPlayerIsIA)
+        {
+            int toSteal = 999;
+            while (toSteal > numberOfPlayers && toSteal == currentPlayerIndex)
+            {
+                toSteal = (int)UnityEngine.Random.Range(0, numberOfPlayers);
+            }
+            playerToSteal = players[toSteal];
+            state = TVStationAction;
+        }
+        else
         if (playerMadeChoice)
         {
             //Ici definir dans playerToSteal le joueur à qui voler 5 argent car on adore largen JE DETESTE LES STATES MACHINE DE TA MER

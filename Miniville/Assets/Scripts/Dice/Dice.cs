@@ -7,8 +7,6 @@ public class Dice : MonoBehaviour
     [SerializeField] float throwForce = 2f;
     public Vector3 DicePosAtBegin;
 
-    [SerializeField] Collider collider;
-
     Rigidbody rb;
 
     public int result = -1;

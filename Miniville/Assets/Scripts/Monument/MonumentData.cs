@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Cards/Monument")]
@@ -7,5 +8,6 @@ public class MonumentData : ScriptableObject
     [HideInInspector]public CardType type = CardType.Building;
     public Material headMaterial;
     public Material tailMaterial;
+    public GameObject model;
     public int Cost;
 }

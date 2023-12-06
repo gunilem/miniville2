@@ -29,8 +29,6 @@ public class Player : MonoBehaviour
     [SerializeField]int x = 0;
     [SerializeField] int z = 0;
 
-
-
     [Header("cardDisplay")]
     [SerializeField] GameObject cardPrefab;
 
@@ -45,11 +43,17 @@ public class Player : MonoBehaviour
 
     public int cardPerRow = 5;
 
+    [Header("Model")]
+
+    [SerializeField] GameObject modelCentreCommercial;
+    [SerializeField] GameObject modelGare;
+    [SerializeField] GameObject modelParcAttraction;
+    [SerializeField] GameObject modelRadio;
+
     [Header("coinDisplay")]
     public GameObject coinInstantiatePos;
 
     public GameObject diceThrowingPos;
-
 
     public int Coins {
         get { return coins; }
@@ -115,6 +119,19 @@ public class Player : MonoBehaviour
             nbMonumentDisplayer.text = (int.Parse(nbMonumentDisplayer.text) + 1).ToString();
             PileMonuments[who] = true;
             Coins -= AllCards.MonumentsData[who].Cost;
+
+            GameObject modelToSetVisible = modelGare;
+
+            switch (who)
+            { 
+                case MonumentName.Station:          modelToSetVisible = modelGare; break;
+                case MonumentName.Mall:             modelToSetVisible = modelCentreCommercial; break;
+                case MonumentName.RadioTower:       modelToSetVisible = modelRadio; break;
+                case MonumentName.AmusementPark:    modelToSetVisible = modelParcAttraction; break;
+            }
+
+            modelToSetVisible?.SetActive(true);
+
             return true;
         }
         return false;
