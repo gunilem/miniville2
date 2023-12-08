@@ -14,7 +14,7 @@ public class BGM_Handler : MonoBehaviour
     {
         if (instance != null)
         {
-            Debug.Log("Il y a trop de MainMenuScript");
+            Debug.Log("Il y a trop de d'instance");
             return;
         }
         instance = this;
@@ -34,14 +34,17 @@ public class BGM_Handler : MonoBehaviour
        switch (music)
         {
             case "Start":
-                eventInstance.setParameterByName("Music_Selector", 0.0F);
+                RuntimeManager.StudioSystem.setParameterByName("Music_Selector", 0.0f);
                 break;
             case "Game":
-                eventInstance.setParameterByName("Music_Selector", 1.0F);
-                break;
-            case "End":
-                eventInstance.setParameterByName("Music_Selector", 2.0F);
+                RuntimeManager.StudioSystem.setParameterByName("Music_Selector", 1.0f);
                 break;
         }
+    }
+
+    public void DestroyInstance()
+    {
+        eventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        Destroy(this);
     }
 }
