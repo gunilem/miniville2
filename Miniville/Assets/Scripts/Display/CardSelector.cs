@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using UnityEngine.EventSystems;
+using System.Linq;
+using System;
 
 public class CardSelector : MonoBehaviour
 {
@@ -37,10 +39,25 @@ public class CardSelector : MonoBehaviour
     {
         if (Game.instance.isPurchasing || Game.instance.PreThrowingDiceState)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (!Game.instance.players[Game.instance.currentPlayerIndex].playerIsAI)
             {
-                if (!isCardSelected) SelectCard();
-                if (isCardSelected && !selectingCard && !deselectingCard) DeselectCard();
+                if (Input.GetMouseButtonDown(0))
+                {
+
+                    if (!isCardSelected) SelectCard();
+                    if (isCardSelected && !selectingCard && !deselectingCard) DeselectCard();
+                }
+            }
+            else if (!isCardSelected)
+            {
+                if ((int)UnityEngine.Random.Range(0, 2) == 0)
+                {
+                    SelectCardAIForPurchase();
+                }
+                else
+                {
+                    ToNextState();
+                }
             }
             if (selectingCard)
             {
@@ -64,6 +81,11 @@ public class CardSelector : MonoBehaviour
                             { Game.instance.players[Game.instance.currentPlayerIndex].purchaseCardButton.interactable = true; }
                         }
                     }
+
+                    if (Game.instance.players[Game.instance.currentPlayerIndex].playerIsAI)
+                    {
+                        Purchase();
+                    }
                 }
             }
             if (deselectingCard)
@@ -75,6 +97,7 @@ public class CardSelector : MonoBehaviour
                 }
                 else
                 {
+
                     CardDisplayData data = Selectedcard.GetComponent<CardDisplayData>();
 
                     deselectingCard = false;
@@ -114,10 +137,18 @@ public class CardSelector : MonoBehaviour
         {
             if (!firstCardDeselecting)
             {
-                if (Input.GetMouseButtonDown(0))
+                if (!Game.instance.players[Game.instance.currentPlayerIndex].playerIsAI)
                 {
-                    if (!selectingCard) SelectionTradingState();
-                    if (isCardSelected && !selectingCard && !deselectingCard) DeselectCard();
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        if (!selectingCard) SelectionTradingState();
+                        if (isCardSelected && !selectingCard && !deselectingCard) DeselectCard();
+                    }
+                }
+                else 
+                {
+                    if (!selectingCard && !secondCardSelected )
+                        SelectionTradingStateAI();
                 }
                 if (selectingCard && firstCardSelected)
                 {
@@ -178,6 +209,7 @@ public class CardSelector : MonoBehaviour
                         secondCardPos = Vector3.zero;
                         secondCard = null;
                         secondCardSelected = false;
+                        Game.instance.isTrading = false;
                         Game.instance.playerMadeChoice = true;
                     }
                 }
@@ -194,6 +226,22 @@ public class CardSelector : MonoBehaviour
                     firstCard = null;
                     firstCardPlayer = null;
                 }
+            }
+        }
+        else if (Game.instance.isStealingMoney)
+        {
+            if (Game.instance.players[Game.instance.currentPlayerIndex].playerIsAI)
+            {
+                int random = UnityEngine.Random.Range(0, Game.instance.numberOfPlayers);
+                if (Game.instance.currentPlayerIndex == random)
+                {
+                    if (random == Game.instance.numberOfPlayers - 1)
+                    {
+                        random--;
+                    }
+                    else random++;
+                }
+                SelectPlayerToStealCoins(random);
             }
         }
     }
@@ -247,6 +295,64 @@ public class CardSelector : MonoBehaviour
         
     }
 
+    public void SelectCardAIForPurchase()
+    {
+        GameObject[] gos;
+        if ((int)UnityEngine.Random.Range(0, 2) == 0)
+        {
+            gos = Game.instance.cardObjects.Values.ToArray();
+        }
+        else
+        {
+            gos = Game.instance.players[Game.instance.currentPlayerIndex].MonumentsObjects.Values.ToArray();
+        }
+        int randomGo = UnityEngine.Random.Range(0, gos.Length);
+        GameObject cardObject = gos[randomGo];
+
+
+        basePos = cardObject.transform.position;
+        CardDisplayData data = cardObject.transform.GetComponent<CardDisplayData>();
+
+        if (data.cardName != CardName.None)
+        {
+            if ((data.player != null && data.player.NbCard(data.cardName) > 1) || (data.player == null && Game.instance.NbCard(data.cardName) > 1))
+            {
+                GameObject card = Instantiate(cardObject.transform.gameObject, cardObject.transform.parent);
+                card.transform.position = basePos;
+                CardDisplayData data2 = card.GetComponent<CardDisplayData>();
+                data2.cardName = data.cardName;
+                data2.player = data.player;
+                data2.size = data.size;
+                data2.cardType = data.cardType;
+                data2.x = data.x;
+                data2.y = data.y;
+
+                Selectedcard = card.transform;
+            }
+            else
+                Selectedcard = cardObject.transform;
+        }
+        else
+            Selectedcard = cardObject.transform;
+
+        Game.instance.players[Game.instance.currentPlayerIndex].nextRoundButton.interactable = false;
+        isCardSelected = true;
+        selectingCard = true;
+
+        previousParent = Selectedcard.parent;
+        Selectedcard.SetParent(positionOfCard, true);
+
+        if (Game.instance.PreThrowingDiceState)
+        {
+            Debug.Log("klj654874v");
+            Game.instance.players[Game.instance.currentPlayerIndex].roll1DiceButton.interactable = false;
+            Game.instance.players[Game.instance.currentPlayerIndex].roll2DiceButton.interactable = false;
+        }
+
+        //SFX
+        sfx.PlaySound("cardToFront", Selectedcard);
+    }
+
     public void DeselectCard()
     {
         if (throwCast(LayerMask.NameToLayer("Everything")))
@@ -272,7 +378,6 @@ public class CardSelector : MonoBehaviour
         }
         Game.instance.players[Game.instance.currentPlayerIndex].purchaseCardButton.interactable = false;
 
-        previousParent = Game.instance.players[Game.instance.currentPlayerIndex].cardContent;
         Selectedcard.SetParent(previousParent);
         //SFX
         sfx.PlaySound("cardToBack", Selectedcard);
@@ -319,6 +424,8 @@ public class CardSelector : MonoBehaviour
                 Selectedcard.SetParent(data.player.cardContent, true);
                 basePos = data.player.cardContent.TransformPoint(Game.instance.players[Game.instance.currentPlayerIndex].AddToDict(Selectedcard.gameObject));
                 wansToChangeRound = true;
+
+                previousParent = Game.instance.players[Game.instance.currentPlayerIndex].cardContent;
             }
         }
         else
@@ -483,6 +590,150 @@ public class CardSelector : MonoBehaviour
         }
     }
 
+    public void SelectionTradingStateAI()
+    {
+        
+        
+        if (!firstCardSelected)
+        {
+            int random = UnityEngine.Random.Range(0, Game.instance.numberOfPlayers);
+            if (Game.instance.currentPlayerIndex == random)
+            {
+                if (random == Game.instance.numberOfPlayers - 1)
+                {
+                    random--;
+                }
+                else random++;
+            }
+
+            GameObject[] gos = Game.instance.players[random].cardObjects.Values.ToArray();
+            int randomGo = UnityEngine.Random.Range(0, gos.Length);
+            GameObject cardObject = gos[randomGo];
+
+            CardDisplayData data = cardObject.transform.GetComponent<CardDisplayData>();
+
+            if (data.player != null && data.cardName != CardName.None && data.cardType != CardType.Building)
+            {
+                if (data.player.NbCard(data.cardName) > 1)
+                {
+                    GameObject card = Instantiate(cardObject.transform.gameObject, cardObject.transform.parent);
+                    card.transform.position = cardObject.transform.position;
+                    CardDisplayData data2 = card.GetComponent<CardDisplayData>();
+                    data2.cardName = data.cardName;
+                    data2.player = data.player;
+                    data2.size = data.size;
+                    data2.cardType = data.cardType;
+                    data2.x = data.x;
+                    data2.y = data.y;
+
+
+                    firstCardSelected = true;
+                    selectingCard = true;
+
+
+                    firstCard = card.transform;
+                    //firstCardBasePos = hit.transform.localPosition;
+                    firstCardPlayer = data2.player;
+
+
+                    Game.instance.tradingCardUI1.SetActive(false);
+                    Game.instance.tradingCardUI2.SetActive(true);
+                }
+                else
+                {
+
+
+                    firstCardSelected = true;
+                    selectingCard = true;
+
+
+                    firstCard = cardObject.transform;
+                    //firstCardBasePos = hit.transform.localPosition;
+                    firstCardPlayer = data.player;
+
+
+                    Game.instance.tradingCardUI1.SetActive(false);
+                    Game.instance.tradingCardUI2.SetActive(true);
+                }
+            }
+        }
+        else
+        {
+            GameObject[] gos = Game.instance.players[Game.instance.currentPlayerIndex].cardObjects.Values.ToArray();
+            int randomGo = UnityEngine.Random.Range(0, gos.Length);
+            GameObject cardObject = gos[randomGo];
+
+            CardDisplayData data = cardObject.transform.GetComponent<CardDisplayData>();
+
+            if (data.player != null && data.cardName != CardName.None && data.cardType != CardType.Building)
+            {
+                if (data.player.NbCard(data.cardName) > 1)
+                {
+                    GameObject card = Instantiate(cardObject.transform.gameObject, cardObject.transform.parent);
+                    card.transform.position = cardObject.transform.position;
+                    CardDisplayData data2 = card.GetComponent<CardDisplayData>();
+                    data2.cardName = data.cardName;
+                    data2.player = data.player;
+                    data2.size = data.size;
+                    data2.cardType = data.cardType;
+                    data2.x = data.x;
+                    data2.y = data.y;
+                    secondCardSelected = true;
+                    selectingCard = true;
+
+
+                    secondCard = card.transform;
+                    //secondCardBasePos = hit.transform.localPosition;
+                    secondCardPlayer = data2.player;
+                }
+                else
+                {
+                    secondCardSelected = true;
+                    selectingCard = true;
+
+
+                    secondCard = cardObject.transform;
+                    //secondCardBasePos = hit.transform.localPosition;
+                    secondCardPlayer = data.player;
+                }
+
+                firstCard.SetParent(secondCardPlayer.cardContent, true);
+                secondCard.SetParent(firstCardPlayer.cardContent, true);
+
+
+                firstCardPlayer.PileCards[firstCard.GetComponent<CardDisplayData>().cardName]--;
+                if (firstCardPlayer.NbCard(firstCard.GetComponent<CardDisplayData>().cardName) == 0)
+                    firstCardPlayer.cardObjects.Remove(firstCard.GetComponent<CardDisplayData>().cardName);
+
+                firstCardPlayer.GiveCard(secondCard.GetComponent<CardDisplayData>().cardName);
+
+
+                secondCardPlayer.PileCards[secondCard.GetComponent<CardDisplayData>().cardName]--;
+                if (secondCardPlayer.NbCard(secondCard.GetComponent<CardDisplayData>().cardName) == 0)
+                    secondCardPlayer.cardObjects.Remove(secondCard.GetComponent<CardDisplayData>().cardName);
+
+                secondCardPlayer.GiveCard(firstCard.GetComponent<CardDisplayData>().cardName);
+
+                secondCardPos = firstCardPlayer.cardContent.TransformPoint(firstCardPlayer.AddToDict(secondCard.gameObject));
+
+                firstCardPos = secondCardPlayer.cardContent.TransformPoint(secondCardPlayer.AddToDict(firstCard.gameObject));
+
+
+                //firstCardPlayer.ReloadCard();
+
+
+
+                firstCard.GetComponent<CardDisplayData>().player = secondCardPlayer;
+                secondCard.GetComponent<CardDisplayData>().player = firstCardPlayer;
+
+                Game.instance.playerToSteal = firstCardPlayer;
+                Game.instance.tradingCardUI2.SetActive(false);
+
+            }
+        }
+
+    }
+
     void DeselectTradingCard()
     {
         basePos = firstCardPlayer.cardContent.TransformPoint(new Vector3(firstCard.GetComponent<CardDisplayData>().x, 0, firstCard.GetComponent<CardDisplayData>().y));
@@ -496,6 +747,7 @@ public class CardSelector : MonoBehaviour
         if (Game.instance.isStealingMoney)
         {
             Game.instance.playerToSteal = Game.instance.players[index];
+            Game.instance.isStealingMoney = false;
             Game.instance.playerMadeChoice = true;
         }
     }

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using FMODUnity;
 using FMOD.Studio;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class Game : MonoBehaviour
     [SerializeField] public GameObject tradingMoneyUI;
 
     [SerializeField] TextMeshProUGUI diceCount;
+
+    [SerializeField] GameObject winScreen;
+    [SerializeField] TextMeshProUGUI winScreenText; 
 
     [SerializeField] Collider tableCollider;
 
@@ -50,11 +54,12 @@ public class Game : MonoBehaviour
     [SerializeField]int currentDiceResult = 11;
     int playerWhosWin;
     public Dictionary<CardName, int> PileCards = new Dictionary<CardName, int>();
-    Dictionary<CardName, GameObject> cardObjects = new Dictionary<CardName, GameObject>();
+    public Dictionary<CardName, GameObject> cardObjects = new Dictionary<CardName, GameObject>();
 
     [Header("Settings")]
     [Range(1, 4)]public int numberOfPlayers = 1;
     public int numberOfIA;
+    public string gameMode;
 
     [Header("cardDisplay")]
     [SerializeField] GameObject cardPrefab;
@@ -64,6 +69,8 @@ public class Game : MonoBehaviour
 
     public float cardSizeMultiplier = 1f;
 
+    public bool IAhasMadeChoice = false;
+
     int x = 0;
     int z = 0;
 
@@ -72,8 +79,6 @@ public class Game : MonoBehaviour
     public bool ToNextState = false;
 
     public bool isPurchasing = false;
-
-    private bool currentPlayerIsIA = false;
 
     [Header("Dice Debug")]
     [SerializeField] bool useTrickDiceResult;
@@ -96,6 +101,7 @@ public class Game : MonoBehaviour
         if (MainMenuScript.instance != null)
         {
             numberOfPlayers = MainMenuScript.instance.numberOfPlayers; numberOfIA = MainMenuScript.instance.numberOfIA;
+            gameMode = MainMenuScript.instance.gameMode;
             Destroy(MainMenuScript.instance.transform.gameObject);
         }
         FillPile();        
@@ -105,6 +111,10 @@ public class Game : MonoBehaviour
         {
             players[i].Ui.SetActive(true);
             players[i].UIButtonStealMoney.interactable = false;
+            if (i >= numberOfPlayers - numberOfIA)
+            {
+                players[i].playerIsAI = true;
+            }
         }
 
         players[currentPlayerIndex].UiImage.color = new Color32(255, 255, 255, 255);
@@ -140,7 +150,6 @@ public class Game : MonoBehaviour
 
     public void PlayerTrowDices()
     {
-        currentPlayerIsIA = (numberOfIA >= numberOfPlayers - currentPlayerIndex);
 
         diceCount.text = "";
         PreThrowingDiceState = true;
@@ -149,7 +158,7 @@ public class Game : MonoBehaviour
         if (playerHasStation) players[currentPlayerIndex].roll2DiceButton.interactable = true;
         players[currentPlayerIndex].roll1DiceButton.interactable = true;
         
-        if (currentPlayerIsIA)
+        if (players[currentPlayerIndex].playerIsAI)
         {
             if ((int)UnityEngine.Random.Range(0, 2) == 0 && playerHasStation)
                 ThrowDice(2);
@@ -215,7 +224,25 @@ public class Game : MonoBehaviour
         {
             players[currentPlayerIndex].firstThrow = false;
             rerollUi.SetActive(true);
-            state = WaitForRerollDice;
+            if (players[currentPlayerIndex].playerIsAI)
+            {
+                IAhasMadeChoice = true;
+                rerollDice = (int)UnityEngine.Random.Range(0, 2) == 0;
+                if (rerollDice)
+                {
+                    state = PlayerTrowDices;
+                    rerollDice = false;
+                }
+                else
+                {
+                    state = PaidOtherPlayers;
+                }
+                rerollUi.SetActive(false);
+            }
+            else
+            {
+                state = WaitForRerollDice;
+            }
         }
         else state = PaidOtherPlayers;
         
@@ -359,20 +386,44 @@ public class Game : MonoBehaviour
         return hasBought;
     }
 
+    public bool playerIsWinning()
+    {
+        var currentPlayer = players[currentPlayerIndex];
+        switch (gameMode)
+        {
+            case "Classique":
+
+                foreach (bool monu in currentPlayer.PileMonuments.Values)
+                {
+                    if (!monu)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            case "Rapide":
+                return currentPlayer.Coins >= 10;
+            case "Normal":
+                return currentPlayer.Coins >= 20;
+            case "Long":
+                return currentPlayer.Coins >= 30;
+            case "Expert":
+                foreach (int nbCard in currentPlayer.PileCards.Values)
+                {
+                    if (nbCard == 0)
+                    {
+                        return false;
+                    }
+                }
+                return currentPlayer.Coins >= 20;
+        }
+        return false;
+    }
+
     public void CheckPlayerHasWon()
     {
         CameraScript.instance.GoToOriginalPos();
-        var currentPlayer = players[currentPlayerIndex];
-        var hasWon = true;
-
-        foreach (bool monu in currentPlayer.PileMonuments.Values)
-        {
-            if (!monu)
-            {
-                hasWon = false;
-                break;
-            }
-        }
+        var hasWon = playerIsWinning();
 
         if (hasWon)
         {
@@ -395,7 +446,8 @@ public class Game : MonoBehaviour
     }
     public void EndGame()
     {
-        Debug.Log("Fin du jeu");
+        winScreen.SetActive(true);
+        winScreenText.text = $"Player {playerWhosWin} has win\n GG everyone";
     }
 
     private void PurpleCardAction()
@@ -448,19 +500,7 @@ public class Game : MonoBehaviour
 
     void WaitToChooseTheCardToSteal() //étape 1 Buisness center action
     {
-        if (currentPlayerIsIA)
-        {
-            int toSteal = 999;
-            while (toSteal > numberOfPlayers && toSteal == currentPlayerIndex)
-            {
-                toSteal = (int)UnityEngine.Random.Range(0, numberOfPlayers);
-            }
-            playerToSteal = players[toSteal];
-            //ICI appeler la méthode magique de Paul qui permet d'échanger la carte A et la carte B
-
-            state = BuisnessCenterAction;
-        }
-        else
+        
         if (playerMadeChoice)
         {
             //ICI redéfinir cardToSteal et lier playerToSteal au joueur qui avait la carte
@@ -509,17 +549,7 @@ public class Game : MonoBehaviour
 
     void WaitToChoosePlayerToStealMoney() //étape 1 TV station action
     {
-        if (currentPlayerIsIA)
-        {
-            int toSteal = 999;
-            while (toSteal > numberOfPlayers && toSteal == currentPlayerIndex)
-            {
-                toSteal = (int)UnityEngine.Random.Range(0, numberOfPlayers);
-            }
-            playerToSteal = players[toSteal];
-            state = TVStationAction;
-        }
-        else
+        
         if (playerMadeChoice)
         {
             //Ici definir dans playerToSteal le joueur à qui voler 5 argent car on adore largen JE DETESTE LES STATES MACHINE DE TA MER
@@ -628,4 +658,11 @@ public class Game : MonoBehaviour
         return PileCards[cardName];
     }
 
+
+    public void BackToMainScreen()
+    {
+        SceneManager.LoadScene("MainMenu");
+        Debug.Log("Cette ligne à été appeler après le load de scene");
+
+    }
 }

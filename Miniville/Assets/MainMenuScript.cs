@@ -22,8 +22,10 @@ public class MainMenuScript : MonoBehaviour
     [Header("Refs")]
     [SerializeField] TMP_Text numberOfPlayerUI;
     [SerializeField] TMP_Text numberOf_IA_UI;
+    [SerializeField] TMP_Text gameMode_UI;
     [Header("Data")]
     [SerializeField] private int _numberOfPlayers = 2;
+    [SerializeField] private string _gameMode = "Classique";
     [Header("Invoke")]
     [SerializeField] public UnityEvent onChangeScene;
     public int numberOfPlayers { 
@@ -53,6 +55,18 @@ public class MainMenuScript : MonoBehaviour
             numberOf_IA_UI.text = _numberOfIA.ToString();
         }
     }
+    public string gameMode
+    {
+        get
+        {
+            return _gameMode;
+        }
+        set
+        {
+            _gameMode = value;
+            gameMode_UI.text = gameMode.ToString();
+        }
+    }
 
     private void Start()
     {
@@ -75,6 +89,53 @@ public class MainMenuScript : MonoBehaviour
     public void RemoveIA()
     {
         numberOfIA--;
+    }
+
+    public void SetGameMode(bool currentOrder)
+    {
+        switch(gameMode)
+        {
+            case "Classique":
+                if (!currentOrder)
+                {
+                    gameMode = "Expert";
+                    break;
+                }
+                gameMode = "Rapide";
+                break;
+            case "Rapide":
+                if (!currentOrder)
+                {
+                    gameMode = "Classique";
+                    break;
+                }
+                gameMode = "Normal";
+                break;
+            case "Normal":
+                if (!currentOrder)
+                {
+                    gameMode = "Rapide";
+                    break;
+                }
+                gameMode = "Long";
+                break;
+            case "Long":
+                if (!currentOrder)
+                {
+                    gameMode = "Normal";
+                    break;
+                }
+                gameMode = "Expert";
+                break;
+            case "Expert":
+                if (!currentOrder)
+                {
+                    gameMode = "Long";
+                    break;
+                }
+                gameMode = "Classique";
+                break;
+        }
     }
 
     public void PlayButton()

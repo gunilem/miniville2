@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
     public Button UIButtonStealMoney;
     public GameObject canvas;
 
+    public bool playerIsAI = false;
+
     public bool hasStation = false;
     [Header("Coordonnés")]
     [SerializeField]int x = 0;
@@ -69,7 +71,7 @@ public class Player : MonoBehaviour
     public Dictionary<MonumentName, bool> PileMonuments = new Dictionary<MonumentName, bool>();
 
     public Dictionary<CardName, GameObject> cardObjects = new Dictionary<CardName, GameObject>();
-    Dictionary<MonumentName, GameObject> MonumentsObjects = new Dictionary<MonumentName, GameObject>();
+    public Dictionary<MonumentName, GameObject> MonumentsObjects = new Dictionary<MonumentName, GameObject>();
 
     public bool firstThrow = true;
     public bool replay = false;
@@ -82,13 +84,13 @@ public class Player : MonoBehaviour
             PileCards.Add(name, 0);
         }
         PileCards[CardName.WheatFields] = 1;
-        PileCards[CardName.Bakery] = 1; 
+        PileCards[CardName.Bakery] = 1;
         //ajouter tous les monuments désactivé
         foreach (MonumentName name in AllCards.MonumentsData.Keys)
         {
             PileMonuments.Add(name, false);
         }
-        
+
         LoadCard();
 
         Coins = coinsAtStart;

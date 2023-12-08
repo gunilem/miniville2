@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Dice : MonoBehaviour
 {
-    [SerializeField] float gravity = 8f;
     [SerializeField] float torqueForce = 8f;
     [SerializeField] float throwForce = 2f;
     public Vector3 DicePosAtBegin;
