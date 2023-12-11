@@ -85,7 +85,6 @@ public class Player : MonoBehaviour
         }
         PileCards[CardName.WheatFields] = 1;
         PileCards[CardName.Bakery] = 1;
-        PileCards[CardName.BusinessCenter] = 1;
         //ajouter tous les monuments désactivé
         foreach (MonumentName name in AllCards.MonumentsData.Keys)
         {
