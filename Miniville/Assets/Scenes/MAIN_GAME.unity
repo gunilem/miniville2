@@ -3371,7 +3371,7 @@ MonoBehaviour:
   cardPerRow: 5
   ToNextState: 0
   isPurchasing: 0
-  useTrickDiceResult: 0
+  useTrickDiceResult: 1
   trickDiceResult: 6
 --- !u!114 &1575243909
 MonoBehaviour:
