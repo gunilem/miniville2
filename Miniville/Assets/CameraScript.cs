@@ -21,7 +21,6 @@ public class CameraScript : MonoBehaviour
     [Header("Setting")]
     [SerializeField] float lerpSpeed;
     
-    // Start is called before the first frame update
     void Start()
     {
         playersPos[0] = new Vector3(-5.7f, 9.5f, -4);
@@ -33,10 +32,10 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Game.instance.isPurchasing || Game.instance.PreThrowingDiceState)
+        if (Game.instance.isPurchasing || Game.instance.PreThrowingDiceState) //empeche la vue de changer au mauvais moment 
         {
-            if (Input.GetKeyDown(KeyCode.W) || Input.mouseScrollDelta.y > 0) GoToPlayer();
-            if (Input.GetKeyDown(KeyCode.S) || Input.mouseScrollDelta.y < 0) GoToOriginalPos();
+            if (Input.GetKeyDown(KeyCode.W) || Input.mouseScrollDelta.y > 0) GoToPlayer(); //si on scroll ou appuis sur Z, on fait zoomer la camera sur le joueur qui joue actuellement 
+            if (Input.GetKeyDown(KeyCode.S) || Input.mouseScrollDelta.y < 0) GoToOriginalPos(); //si à l'inverse ou appuis sur S ou qu'on scroll vers l'arière, alors on montre tout le plateau
         }
         Move();
     }
@@ -48,9 +47,9 @@ public class CameraScript : MonoBehaviour
 
     public void GoToPlayer()
     {
-        currentTarget = playersPos[Game.instance.currentPlayerIndex];
-        //désactive toutes les UI des players sauf celle de celui qui joue 
-        for(int i = 0; i < Game.instance.numberOfPlayers; i++)
+        currentTarget = playersPos[Game.instance.currentPlayerIndex]; //on met la target sur le joueur actuel
+
+        for(int i = 0; i < Game.instance.numberOfPlayers; i++)//désactive toutes les UI des players sauf celle de celui qui joue 
         {
             if (i == Game.instance.currentPlayerIndex) Game.instance.players[i].canvas.SetActive(true);
             else Game.instance.players[i].canvas.SetActive(false);
