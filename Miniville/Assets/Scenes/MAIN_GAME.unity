@@ -5007,7 +5007,7 @@ PrefabInstance:
       objectReference: {fileID: 1366986539}
     - target: {fileID: 3265926246988989242, guid: 2fd0fbd74b95092479027a195c208ba8, type: 3}
       propertyPath: coinsAtStart
-      value: 3
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3556561548713764267, guid: 2fd0fbd74b95092479027a195c208ba8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
