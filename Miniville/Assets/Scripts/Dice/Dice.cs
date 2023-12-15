@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Dice : MonoBehaviour
 {
+    // Setup dice's params
     [SerializeField] float torqueForce = 8f;
     [SerializeField] float throwForce = 2f;
     public Vector3 DicePosAtBegin;
@@ -45,8 +46,7 @@ public class Dice : MonoBehaviour
         }
     }
 
-
-    public void CalculateResult()
+    public void CalculateResult() //Get result
     {
         if (transform.right == Vector3.up)
         {
@@ -81,14 +81,14 @@ public class Dice : MonoBehaviour
     }
 
 
-    public void ResetDice(Vector3 pos)
+    public void ResetDice(Vector3 pos) //Set dice's transform and rigidbody to initial
     {
         transform.position = pos;
         transform.rotation = Quaternion.identity;
         rb.velocity = Vector3.zero;
     }
 
-    public void ThrowDice()
+    public void ThrowDice() //Trow the dice with some randomness and toward the center
     {
         timer = cooldown;
         result = -1;
@@ -105,7 +105,7 @@ public class Dice : MonoBehaviour
 
     }
 
-    public bool IsDiceHasStopped()
+    public bool IsDiceHasStopped() //Get if dice is stopped
     {
         return rb.velocity.magnitude < 0.0001;
     }

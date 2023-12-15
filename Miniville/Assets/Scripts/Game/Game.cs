@@ -85,7 +85,7 @@ public class Game : MonoBehaviour
     [SerializeField] int trickDiceResult;
 
     delegate void del(); del state;
-    private void Awake()
+    private void Awake() //singleton
     {
         if (instance != null)
         {
@@ -107,7 +107,7 @@ public class Game : MonoBehaviour
         FillPile();        
         currentPlayerIndex = 0;
 
-        for (int i = 0; i < numberOfPlayers; i++)
+        for (int i = 0; i < numberOfPlayers; i++) //permet d'activer la UI de tous les joueurs présent et d'attribuer s'il sont des IA ou non
         {
             players[i].Ui.SetActive(true);
             players[i].UIButtonStealMoney.interactable = false;
@@ -121,22 +121,14 @@ public class Game : MonoBehaviour
 
         ReloadCard();
 
-        state = PlayerTrowDices;
+        state = PlayerTrowDices; //le jeu utilise des states machine on commence donc avec le premier state appelé qui s'enchenera ensuite dans des boucles 
     }
     void Update()
     {
-        /*Sandro DEBUG
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            
-            players[1].PileCards[CardName.CoffeeShop] = 1;
-            players[1].PileMonuments[MonumentName.Mall] = true;
-            Debug.Log(string.Format("Le joueur 2 possède {0} cofee shop et possède le Mall est {1}", players[1].PileCards[CardName.CoffeeShop], players[1].PileMonuments[MonumentName.Mall]));
-        }Sandro DEBUG */
         state();
     }
 
-    private void FillPile()
+    private void FillPile() //permet de remplir la pile de carte achetable sur le terrain
     {
         foreach (CardData data in AllCards.CardsData.Values)
         {
@@ -148,32 +140,33 @@ public class Game : MonoBehaviour
     }
 
 
-    public void PlayerTrowDices()
+    public void PlayerTrowDices() //state appelé quand le joueur doit lancer le dé
     {
 
         diceCount.text = "";
         PreThrowingDiceState = true;
         Debug.Log("PlayersPileMonumentSize : " + players[currentPlayerIndex].PileMonuments.Keys.Count);
+
         bool playerHasStation = players[currentPlayerIndex].PileMonuments[MonumentName.Station];
-        if (playerHasStation) players[currentPlayerIndex].roll2DiceButton.interactable = true;
+        if (playerHasStation) players[currentPlayerIndex].roll2DiceButton.interactable = true; //on vérifie si le joueur actuelle possède la gare, si c'est le cas on lui permet de lancer 2 dés 
         players[currentPlayerIndex].roll1DiceButton.interactable = true;
         
-        if (players[currentPlayerIndex].playerIsAI)
+        if (players[currentPlayerIndex].playerIsAI) //si le joueur est une IA on verifira en boucle s'il veut lancer 2 dés ou non 
         {
             if ((int)UnityEngine.Random.Range(0, 2) == 0 && playerHasStation)
                 ThrowDice(2);
             else
                 ThrowDice(1);
         }
-        else
+        else //sinon on laisse le script d'IA faire
         {
             state = Wait;
         }
     }
 
-    public void Wait() {; }
+    public void Wait() {; } //state appelé quand on veux simplement attendre
 
-    public void ThrowDice(int nbOFDice)
+    public void ThrowDice(int nbOFDice) //state appelé 1 seul fois après que le ou les dés soient lancer puis passe directement à WaitForDiceResult 
     {
         PreThrowingDiceState = false;
         CameraScript.instance.GoToOriginalPos();
@@ -198,7 +191,7 @@ public class Game : MonoBehaviour
         state = WaitForDiceResult;
     }
 
-    public void WaitForDiceResult()
+    public void WaitForDiceResult() //state appelé tant que les dés n'ont pas fini de rouler et vérifie au passage que les dés ne soit pas cassé 
     {
         int _result = 0;
         for (int i = 0; i < DiceThrown; i++)
@@ -248,7 +241,7 @@ public class Game : MonoBehaviour
         
     }
 
-    public void WaitForRerollDice()
+    public void WaitForRerollDice() //state appelé si le joueur décide de relancer les dés grace à un effet de carte
     {
         if (playerMadeChoice)
         {
@@ -267,13 +260,13 @@ public class Game : MonoBehaviour
         }
     }
 
-    public void SetRerollDices(bool choice)
+    public void SetRerollDices(bool choice) //méthode appelé quand le joueur décide de relancer les dés grace à un effet de carte
     {
         playerMadeChoice = true;
         rerollDice = choice;
     }
 
-    public void PaidOtherPlayers()
+    public void PaidOtherPlayers() //state qui vérifie toutes les cartes des autres joueurs qu'il a activer pour leur payer leur du et activer leur effet
     {
         for(int i = 0; i < numberOfPlayers; i++)
         {
@@ -301,7 +294,7 @@ public class Game : MonoBehaviour
     }
 
 
-    public void PlayersReceivesMoney()
+    public void PlayersReceivesMoney() //state appelé pour activer toutes les cartes que le joueur a activer grâce à son dé, recevoir son argent et activer ces effets
     {
         if(currentDiceResult == 6) //si le dice = 6 ça active seulement les cartes violettes donc on passe dans le state PurpleCard
         {
@@ -356,7 +349,7 @@ public class Game : MonoBehaviour
         state = WaitForPlayerToSelectCard;
 
     }
-    public void WaitForPlayerToSelectCard()
+    public void WaitForPlayerToSelectCard() //ce state permet d'attendre de voir si le joueur veux acheter un monument ou une carte
     {
         isPurchasing = true;
 
@@ -368,7 +361,7 @@ public class Game : MonoBehaviour
             state = CheckPlayerHasWon;
         }
     }
-    public bool PlayerBuild(CardName cardPlayerWantToBuy)
+    public bool PlayerBuild(CardName cardPlayerWantToBuy) //permet au joueur d'acheter une carte
     {
         var currentPlayer = players[currentPlayerIndex];
 
@@ -376,7 +369,7 @@ public class Game : MonoBehaviour
         return hasBought;
     }
 
-    public bool PlayerBuildMonument(MonumentName cardPlayerWantToBuy)
+    public bool PlayerBuildMonument(MonumentName cardPlayerWantToBuy) //permet au joueur d'acheter un monument
     {
         var currentPlayer = players[currentPlayerIndex];
 
@@ -386,7 +379,7 @@ public class Game : MonoBehaviour
         return hasBought;
     }
 
-    public bool playerIsWinning()
+    public bool playerIsWinning() //appelé si le joueur à réunni les conditions de victoire (diffère en fonction des modes de jeu)
     {
         var currentPlayer = players[currentPlayerIndex];
         switch (gameMode)
@@ -420,7 +413,7 @@ public class Game : MonoBehaviour
         return false;
     }
 
-    public void CheckPlayerHasWon()
+    public void CheckPlayerHasWon() //appelé à chaque fin de tour pour verifier si le joueur à réunni les conditions de victoire (diffère en fonction des modes de jeu)
     {
         CameraScript.instance.GoToOriginalPos();
         var hasWon = playerIsWinning();
@@ -444,7 +437,7 @@ public class Game : MonoBehaviour
             state = PlayerTrowDices;
         }
     }
-    public void EndGame()
+    public void EndGame() //appelé après qu'un joueur ai gagné 
     {
         winScreen.SetActive(true);
         winScreenText.text = $"Player {playerWhosWin} has win\n GG everyone";
@@ -509,7 +502,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void BuisnessCenterAction()
+    private void BuisnessCenterAction() //étape 2 de la carte Buisness center
     {
         int indexPlayerToStealCard = 0;
         for(int i = 0; i < numberOfPlayers; i++)
@@ -558,7 +551,8 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void TVStationAction() {
+    private void TVStationAction() //étape 2 TV station action
+    {
         int indexPlayerToStealCoins = 0;
         for (int i = 0; i < numberOfPlayers; i++)
         {
@@ -582,7 +576,7 @@ public class Game : MonoBehaviour
         state = WaitForPlayerToSelectCard;
     }
 
-    void ReloadCard()
+    void ReloadCard() //méthode permettant de reload la UI des cartes après que des modif ai été fait en interne
     {
         List<CardName> cards = PileCards.Keys.ToList<CardName>();
 
@@ -636,14 +630,14 @@ public class Game : MonoBehaviour
             }
         }
     }
-    void ChangeMaterial(Material material, GameObject go)
+    void ChangeMaterial(Material material, GameObject go) //permet de mettre le material voulu sur une carte
     {
         Material[] materialsArray = go.GetComponent<MeshRenderer>().materials;
         materialsArray[2] = material;
         go.GetComponent<MeshRenderer>().materials = materialsArray;
     }
 
-    public bool PlayerHasCard(GameObject go)
+    public bool PlayerHasCard(GameObject go) //verifie si un joueur possède une dite carte
     {
         foreach (CardName name in cardObjects.Keys.ToList<CardName>())
         {
@@ -653,13 +647,13 @@ public class Game : MonoBehaviour
         return false;
     }
 
-    public int NbCard(CardName cardName)
+    public int NbCard(CardName cardName) //renvoie le nombre de carte encore dispo dans la pile (pour un type de carte donné)
     {
         return PileCards[cardName];
     }
 
 
-    public void BackToMainScreen()
+    public void BackToMainScreen() //permet de retourner au menu principale
     {
         SceneManager.LoadScene("MainMenu");
         Debug.Log("Cette ligne à été appeler après le load de scene");

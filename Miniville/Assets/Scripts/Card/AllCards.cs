@@ -15,11 +15,11 @@ public class AllCards : MonoBehaviour
 
     private void Awake()
     {
-        foreach (var card in allCardsData)
+        foreach (var card in allCardsData) //rempli le dictionnaire allCard avec toutes les cardnames qui existe et les lié à tous les scriptable object associé 
         {
             CardsData.Add(card.cardName, card);
         }
-        foreach (var mon in allmonumentsData)
+        foreach (var mon in allmonumentsData) //la même chose pour les monuments
         {
             MonumentsData.Add(mon.monumentName, mon);
         }
@@ -47,7 +47,7 @@ public class AllCards : MonoBehaviour
 
     }
 
-    static public bool HaveTheRightDice(CardName name, int nmb)
+    static public bool HaveTheRightDice(CardName name, int nmb) //permet de verifier si le numéro d'un dé permet d'activer une certaine carte
     {
         foreach (int dice in CardsData[name].Dice) //si c'est le bon dice
         {
