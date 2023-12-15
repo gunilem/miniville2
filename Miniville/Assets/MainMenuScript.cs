@@ -28,7 +28,8 @@ public class MainMenuScript : MonoBehaviour
     [SerializeField] private string _gameMode = "Classique";
     [Header("Invoke")]
     [SerializeField] public UnityEvent onChangeScene;
-    public int numberOfPlayers { 
+    public int numberOfPlayers //cette propriété est celle qui défini combien de joueur humain l'utilisateur veut mettre, elle ne peut rester que entre 1 et 4
+    { 
         get { 
             return _numberOfPlayers;
         }
@@ -55,7 +56,7 @@ public class MainMenuScript : MonoBehaviour
             numberOf_IA_UI.text = _numberOfIA.ToString();
         }
     }
-    public string gameMode
+    public string gameMode //cette propriété modifie automatiquement la UI associé 
     {
         get
         {
@@ -71,9 +72,11 @@ public class MainMenuScript : MonoBehaviour
     private void Start()
     {
         Debug.Log("Start appelé");
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(this); //ce script est utilisé sur la scene mainGame et est donc délcaré dans DontDestroyOnLoad
     }
 
+
+    //les méthodes suivant sont utilisé par des bouton Unity
     public void AddPlayer()
     {
         numberOfPlayers++;

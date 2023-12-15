@@ -4,7 +4,7 @@ using FMODUnity;
 using UnityEngine.EventSystems;
 using System.Linq;
 using System;
-using static UnityEditor.PlayerSettings;
+using UnityEditor;
 using UnityEditor;
 
 public class CardSelector : MonoBehaviour
